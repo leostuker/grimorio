@@ -26,8 +26,8 @@ const DB_CONFIG = {
   host: process.env.DB_HOST || '192.168.0.153',
   port: parseInt(process.env.DB_PORT || '6532', 10),
   user: process.env.DB_USER || 'leo',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'postgres',
+  password: process.env.DB_PASSWORD || '1998',
+  database: process.env.DB_NAME || 'dndmagias',
   connectionTimeoutMillis: 4000,
   query_timeout: 5000,
 };

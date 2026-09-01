@@ -52,7 +52,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
                 {formatCirculo(magia.circulo)}
               </span>
               <span
@@ -64,7 +64,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
 
             <h3
               onClick={() => onView(magia)}
-              className="text-lg font-bold text-slate-100 group-hover:text-amber-400 transition-colors cursor-pointer truncate"
+              className="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors cursor-pointer truncate"
               title={magia.nome_magia}
             >
               {magia.nome_magia}
@@ -76,7 +76,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             <button
               id={`btn-view-spell-${magia.id_magia}`}
               onClick={() => onView(magia)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
               title="Ver detalhes da magia"
             >
               <Eye className="w-4 h-4" />
@@ -103,7 +103,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         {/* Quick Specs Grid */}
         <div className="grid grid-cols-2 gap-2 my-3 py-2.5 px-3 bg-slate-950/60 rounded-xl border border-slate-800/60 text-xs">
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
             <span className="truncate" title={magia.tempo}>
               {magia.tempo}
             </span>
@@ -118,7 +118,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Hourglass className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <Hourglass className="w-3.5 h-3.5 text-violet-400 shrink-0" />
             <span className="truncate" title={magia.duracao}>
               {magia.duracao}
             </span>
@@ -141,7 +141,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         {/* Badges de Regras (Concentração, Salvaguarda, Ataque, Dano) */}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {magia.concentracao && (
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-700/50">
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-indigo-950/70 text-indigo-300 border border-indigo-700/50">
               Concentração
             </span>
           )}
@@ -161,7 +161,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
           )}
 
           {danoFormula && (
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-orange-950/70 text-orange-300 border border-orange-700/50 font-mono">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-violet-950/80 text-violet-300 border border-violet-700/60 font-mono">
               {danoFormula}
             </span>
           )}

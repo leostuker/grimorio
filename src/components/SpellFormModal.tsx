@@ -667,9 +667,25 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
 
             {/* Tipos de Dano N:M */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-2">
-                Tipos de Dano Associados (Tabela N:M `magias_tipo_dano`)
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-semibold text-slate-300">
+                  Tipos de Dano Associados (Tabela N:M `magias_tipo_dano`)
+                </label>
+                <button
+                  type="button"
+                  id="btn-form-toggle-all-damage"
+                  onClick={() => {
+                    if (formData.tipos_dano.length === TIPOS_DANO.length) {
+                      setFormData({ ...formData, tipos_dano: [] });
+                    } else {
+                      setFormData({ ...formData, tipos_dano: [...TIPOS_DANO] });
+                    }
+                  }}
+                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-800/60"
+                >
+                  {formData.tipos_dano.length === TIPOS_DANO.length ? 'Desmarcar Todos' : 'Selecionar Todos (Qualquer)'}
+                </button>
+              </div>
               <div className="flex flex-wrap gap-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
                 {TIPOS_DANO.map((td) => {
                   const selected = formData.tipos_dano.includes(td);
@@ -680,7 +696,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                       onClick={() => toggleTipoDano(td)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                         selected
-                          ? 'bg-orange-500 text-slate-950 border-orange-400 font-bold shadow-sm'
+                          ? 'bg-indigo-600 text-white border-indigo-400 font-bold shadow-sm'
                           : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                       }`}
                     >
@@ -694,7 +710,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
 
           {/* 6. Conjuradores (Tabela N:M) */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1.5 flex items-center justify-between">
+            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1.5 flex items-center justify-between">
               <span>6. Classes de Conjuradores (Tabela N:M `magias_conjuradores`)</span>
               <span className="text-[11px] font-normal text-slate-400">
                 {formData.conjuradores_ids.length} selecionada(s)
@@ -728,7 +744,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
 
           {/* 7. Descrição Completa */}
           <div className="space-y-2">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-1.5">
+            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1.5">
               7. Descrição e Efeitos da Magia
             </h3>
             <textarea
@@ -738,13 +754,13 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
               value={formData.descricao}
               onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               placeholder="Descreva detalhadamente os efeitos, alvos, dano em níveis superiores, etc."
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none leading-relaxed"
+              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
             />
           </div>
 
           {/* 8. Trava de Segurança */}
-          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 space-y-3">
-            <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+          <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/40 space-y-3">
+            <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
               <Lock className="w-4 h-4" />
               <span>Trava de Segurança Obrigatória (PIN 1998)</span>
             </div>
@@ -762,7 +778,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 placeholder="1998"
-                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
             </div>
           </div>
@@ -784,7 +800,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             id="btn-submit-form"
             onClick={handleSubmit}
             disabled={loading}
-            className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-md shadow-amber-500/20 transition-all disabled:opacity-50"
+            className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-indigo-600/30 transition-all disabled:opacity-50"
           >
             <Save className="w-4 h-4 stroke-[2.5]" />
             {loading ? 'Salvando no Banco...' : isEditing ? 'Salvar Alterações' : 'Cadastrar Magia'}

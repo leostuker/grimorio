@@ -69,19 +69,19 @@ export const SecurityPinModal: React.FC<SecurityPinModalProps> = ({
     >
       <div
         id="security-pin-modal"
-        className="w-full max-w-md bg-slate-900 border border-amber-500/40 rounded-2xl shadow-2xl p-6 text-slate-100 relative overflow-hidden"
+        className="w-full max-w-md bg-slate-900 border border-indigo-500/40 rounded-2xl shadow-2xl p-6 text-slate-100 relative overflow-hidden"
       >
         {/* Decorative Top Accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-600" />
 
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
               <Lock className="w-5 h-5" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-100">{actionTitle}</h3>
-              <span className="text-xs font-medium text-amber-400 uppercase tracking-wider">Trava de Segurança</span>
+              <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">Trava de Segurança</span>
             </div>
           </div>
           <button
@@ -115,7 +115,7 @@ export const SecurityPinModal: React.FC<SecurityPinModalProps> = ({
                 }}
                 placeholder="Ex: 1998"
                 autoFocus
-                className="w-full pl-11 pr-11 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-lg tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 text-lg tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
               <button
                 type="button"
@@ -145,7 +145,7 @@ export const SecurityPinModal: React.FC<SecurityPinModalProps> = ({
                 type="checkbox"
                 checked={rememberSession}
                 onChange={(e) => setRememberSession(e.target.checked)}
-                className="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-400 w-4 h-4"
+                className="rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-400 w-4 h-4"
               />
               <span>Lembrar nesta sessão</span>
             </label>
@@ -154,7 +154,7 @@ export const SecurityPinModal: React.FC<SecurityPinModalProps> = ({
               type="button"
               id="btn-fill-preset-pin"
               onClick={fillDefaultPin}
-              className="text-xs text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
+              className="text-xs text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
             >
               Inserir senha padrão (1998)
             </button>
@@ -173,7 +173,7 @@ export const SecurityPinModal: React.FC<SecurityPinModalProps> = ({
               type="submit"
               id="btn-submit-pin"
               disabled={loading}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all disabled:opacity-50"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50"
             >
               <ShieldCheck className="w-4 h-4" />
               {loading ? 'Validando...' : 'Confirmar e Prosseguir'}

@@ -12,6 +12,7 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
+  CheckCheck,
 } from 'lucide-react';
 import {
   FiltrosMagia,
@@ -103,6 +104,21 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     onChangeFiltros({ ...filtros, tipos_dano: next.length ? next : undefined });
   };
 
+  // Botão "Qualquer" / Selecionar Todos os Danos
+  const todosDanosSelecionados =
+    filtros.tipos_dano &&
+    filtros.tipos_dano.length === TIPOS_DANO.length;
+
+  const toggleTodosDanos = () => {
+    if (todosDanosSelecionados) {
+      // Se todos estão selecionados, limpa o filtro de dano
+      onChangeFiltros({ ...filtros, tipos_dano: undefined });
+    } else {
+      // Seleciona todos os 13 tipos de dano
+      onChangeFiltros({ ...filtros, tipos_dano: [...TIPOS_DANO] });
+    }
+  };
+
   const toggleLivro = (id: number) => {
     const current = filtros.livros_ids || [];
     const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
@@ -114,9 +130,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Header */}
       <div className="p-4 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-amber-400" />
+          <Filter className="w-4 h-4 text-indigo-400" />
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">Filtros Avançados</h2>
-          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-semibold text-amber-400">
+          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-semibold text-indigo-400">
             {totalResultados}
           </span>
         </div>
@@ -126,7 +142,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               id="btn-clear-filters"
               onClick={onResetFiltros}
-              className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 font-medium hover:underline transition-all"
+              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium hover:underline transition-all"
               title="Limpar todos os filtros"
             >
               <RotateCcw className="w-3 h-3" />
@@ -155,7 +171,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Círculo de Magia
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> Círculo de Magia
             </span>
             {openSections.circulo ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -171,7 +187,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     onClick={() => toggleCirculo(c)}
                     className={`py-1.5 rounded-lg text-xs font-bold transition-all border ${
                       selected
-                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-sm'
+                        ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm shadow-indigo-500/20'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
@@ -190,7 +206,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-sky-400" /> Escolas ({ESCOLAS.length})
+              <Shield className="w-3.5 h-3.5 text-indigo-400" /> Escolas ({ESCOLAS.length})
             </span>
             {openSections.escola ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -207,7 +223,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     onClick={() => toggleEscola(escola)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
                       selected
-                        ? `${colors.badge} font-bold ring-1 ring-amber-400/40`
+                        ? `${colors.badge} font-bold ring-1 ring-indigo-400/50`
                         : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:border-slate-700'
                     }`}
                   >
@@ -256,36 +272,67 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
         {/* 4. Tipos de Dano (N:M - Strict ENUM) */}
         <div className="border-b border-slate-800/80 pb-4">
-          <button
-            onClick={() => toggleSection('dano')}
-            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
-          >
-            <span className="flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-orange-400" /> Tipos de Dano ({TIPOS_DANO.length})
-            </span>
-            {openSections.dano ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
+          <div className="w-full flex items-center justify-between mb-2.5">
+            <button
+              onClick={() => toggleSection('dano')}
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-300 uppercase tracking-wider"
+            >
+              <Flame className="w-3.5 h-3.5 text-indigo-400" /> Tipos de Dano ({TIPOS_DANO.length})
+              {openSections.dano ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
+            </button>
+            <button
+              type="button"
+              id="btn-filter-dano-qualquer"
+              onClick={toggleTodosDanos}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 ${
+                todosDanosSelecionados
+                  ? 'bg-indigo-600 text-white border-indigo-400 font-bold shadow-xs'
+                  : 'bg-indigo-950/70 text-indigo-300 border-indigo-800/60 hover:bg-indigo-900/80 hover:text-indigo-200'
+              }`}
+              title="Selecionar todos os tipos de dano ou desmarcar"
+            >
+              <CheckCheck className="w-3 h-3" />
+              {todosDanosSelecionados ? 'Desmarcar Todos' : 'Qualquer (Todos)'}
+            </button>
+          </div>
           {openSections.dano && (
-            <div className="flex flex-wrap gap-1.5 pt-1 max-h-44 overflow-y-auto pr-1">
-              {TIPOS_DANO.map((td) => {
-                const selected = filtros.tipos_dano?.includes(td);
-                const badgeClass = getTipoDanoBadgeClass(td);
-                return (
-                  <button
-                    key={td}
-                    id={`filter-dano-${td}`}
-                    type="button"
-                    onClick={() => toggleTipoDano(td)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
-                      selected
-                        ? `${badgeClass} font-bold ring-1 ring-amber-400/40`
-                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
-                    }`}
-                  >
-                    {td}
-                  </button>
-                );
-              })}
+            <div className="space-y-2 pt-1">
+              {/* Botão de Destaque 'Qualquer / Todos os Danos' */}
+              <button
+                type="button"
+                id="filter-dano-qualquer-pill"
+                onClick={toggleTodosDanos}
+                className={`w-full text-center py-1.5 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                  todosDanosSelecionados
+                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white border-indigo-400 shadow-sm shadow-indigo-500/25'
+                    : 'bg-slate-900/90 text-indigo-300 border-indigo-900/60 hover:border-indigo-600 hover:bg-indigo-950/50'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                <span>{todosDanosSelecionados ? '✓ Todos os Danos Selecionados' : 'Qualquer Dano (Selecionar Todos)'}</span>
+              </button>
+
+              <div className="flex flex-wrap gap-1.5 max-h-44 overflow-y-auto pr-1">
+                {TIPOS_DANO.map((td) => {
+                  const selected = filtros.tipos_dano?.includes(td);
+                  const badgeClass = getTipoDanoBadgeClass(td);
+                  return (
+                    <button
+                      key={td}
+                      id={`filter-dano-${td}`}
+                      type="button"
+                      onClick={() => toggleTipoDano(td)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
+                        selected
+                          ? `${badgeClass} font-bold ring-1 ring-indigo-400/50`
+                          : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                      }`}
+                    >
+                      {td}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -351,7 +398,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     }
                     className={`px-2 py-0.5 rounded text-xs border ${
                       filtros.componente_verbal === true
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-400'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400'
                         : 'bg-slate-900 text-slate-400 border-slate-800'
                     }`}
                   >
@@ -373,7 +420,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     }
                     className={`px-2 py-0.5 rounded text-xs border ${
                       filtros.componente_somatico === true
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-400'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400'
                         : 'bg-slate-900 text-slate-400 border-slate-800'
                     }`}
                   >
@@ -395,7 +442,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     }
                     className={`px-2 py-0.5 rounded text-xs border ${
                       filtros.componente_material === true
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-400'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400'
                         : 'bg-slate-900 text-slate-400 border-slate-800'
                     }`}
                   >
@@ -417,7 +464,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     }
                     className={`px-2 py-0.5 rounded text-xs border ${
                       filtros.consumo_material === true
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-400'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400'
                         : 'bg-slate-900 text-slate-400 border-slate-800'
                     }`}
                   >
@@ -454,7 +501,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   }
                   className={`px-2.5 py-1 rounded text-xs border ${
                     filtros.concentracao === true
-                      ? 'bg-amber-500 text-slate-950 font-bold border-amber-400'
+                      ? 'bg-indigo-600 text-white font-bold border-indigo-400'
                       : 'bg-slate-900 text-slate-400 border-slate-800'
                   }`}
                 >

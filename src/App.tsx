@@ -267,7 +267,7 @@ export default function App() {
               <button
                 id="btn-open-filter-mobile"
                 onClick={() => setIsMobileFilterOpen(true)}
-                className="md:hidden px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-amber-400 flex items-center gap-1.5 shadow-sm"
+                className="md:hidden px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-indigo-400 flex items-center gap-1.5 shadow-sm"
               >
                 <Filter className="w-4 h-4" />
                 Filtros ({magias.length})
@@ -276,7 +276,7 @@ export default function App() {
               <div>
                 <h1 className="text-xl font-black text-slate-100 tracking-tight flex items-center gap-2">
                   <span>Grimório de Magias</span>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-amber-400">
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-indigo-400">
                     {magias.length} {magias.length === 1 ? 'magia' : 'magias'}
                   </span>
                 </h1>
@@ -317,7 +317,7 @@ export default function App() {
                   onClick={() => setViewMode('grid')}
                   className={`p-1.5 rounded-lg transition-colors ${
                     viewMode === 'grid'
-                      ? 'bg-amber-500 text-slate-950 shadow-sm'
+                      ? 'bg-indigo-600 text-white shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                   title="Visualização em Grade"
@@ -329,7 +329,7 @@ export default function App() {
                   onClick={() => setViewMode('table')}
                   className={`p-1.5 rounded-lg transition-colors ${
                     viewMode === 'table'
-                      ? 'bg-amber-500 text-slate-950 shadow-sm'
+                      ? 'bg-indigo-600 text-white shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                   title="Visualização em Tabela"
@@ -348,7 +348,7 @@ export default function App() {
                 className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
                 title="Recarregar do banco"
               >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-amber-400' : ''}`} />
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
               </button>
 
             </div>
@@ -358,7 +358,7 @@ export default function App() {
           {/* Spell Content Grid or Table */}
           {loading ? (
             <div className="py-20 flex flex-col items-center justify-center text-center">
-              <RefreshCw className="w-8 h-8 text-amber-400 animate-spin mb-3" />
+              <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin mb-3" />
               <p className="text-sm font-semibold text-slate-300">Consultando PostgreSQL 16...</p>
               <span className="text-xs text-slate-500">Filtrando magias e cruzando tabelas de junção</span>
             </div>
@@ -383,7 +383,7 @@ export default function App() {
                 <button
                   id="btn-empty-new-spell"
                   onClick={handleOpenNewSpell}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all"
+                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition-all"
                 >
                   <Plus className="w-4 h-4 stroke-[2.5]" /> Cadastrar Nova Magia
                 </button>
@@ -433,10 +433,10 @@ export default function App() {
                         onClick={() => setSelectedSpellForView(m)}
                       >
                         <td className="py-3 px-4">
-                          <div className="font-bold text-slate-100 group-hover:text-amber-400 transition-colors">
+                          <div className="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">
                             {m.nome_magia}
                           </div>
-                          <span className="text-[11px] text-amber-400 font-semibold">
+                          <span className="text-[11px] text-indigo-400 font-semibold">
                             {formatCirculo(m.circulo)}
                           </span>
                         </td>
@@ -452,7 +452,7 @@ export default function App() {
                         <td className="py-3 px-4 text-slate-300">
                           {m.duracao}
                           {m.concentracao && (
-                            <span className="ml-1 text-[10px] text-amber-400 font-semibold block">
+                            <span className="ml-1 text-[10px] text-indigo-400 font-semibold block">
                               (Concentração)
                             </span>
                           )}

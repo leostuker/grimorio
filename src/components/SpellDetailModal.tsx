@@ -70,14 +70,14 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 flex-wrap mb-2">
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-500 text-slate-950 shadow-sm">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-600 text-white shadow-sm">
                   {formatCirculo(magia.circulo)}
                 </span>
                 <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${escolaColor.badge}`}>
                   {magia.escola}
                 </span>
                 {magia.concentracao && (
-                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-600/50">
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-600/50">
                     Concentração
                   </span>
                 )}
@@ -105,7 +105,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-amber-400" /> Tempo
+                <Clock className="w-3.5 h-3.5 text-indigo-400" /> Tempo
               </span>
               <span className="text-sm font-bold text-slate-200">{magia.tempo}</span>
             </div>
@@ -119,7 +119,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
 
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
-                <Hourglass className="w-3.5 h-3.5 text-indigo-400" /> Duração
+                <Hourglass className="w-3.5 h-3.5 text-violet-400" /> Duração
               </span>
               <span className="text-sm font-bold text-slate-200">{magia.duracao}</span>
             </div>
@@ -145,12 +145,12 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2 text-xs">
               {magia.componente_material && (
                 <div className="flex items-start gap-2 text-slate-300">
-                  <Coins className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <Coins className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold text-slate-200">Material:</span>{' '}
                     {magia.descricao_material || 'Componente material genérico (bolsa de componentes/foco)'}
                     {magia.valor_material && (
-                      <span className="ml-2 px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-700/60 font-semibold">
+                      <span className="ml-2 px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-700/60 font-semibold">
                         Custo: {magia.valor_material} PO
                       </span>
                     )}
@@ -197,8 +197,8 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
 
             {danoFormula && (
-              <div className="px-3 py-1.5 rounded-xl bg-orange-950/70 border border-orange-700/50 text-orange-300 text-xs flex items-center gap-2 font-mono">
-                <Flame className="w-4 h-4 text-orange-400" />
+              <div className="px-3 py-1.5 rounded-xl bg-violet-950/80 border border-violet-700/60 text-violet-300 text-xs flex items-center gap-2 font-mono">
+                <Flame className="w-4 h-4 text-violet-400" />
                 <span>
                   <strong>Dano:</strong> {danoFormula}
                 </span>
