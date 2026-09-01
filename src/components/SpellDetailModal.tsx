@@ -17,6 +17,7 @@ import {
   Coins,
   AlertCircle,
   Crosshair,
+  Printer,
 } from 'lucide-react';
 import { MagiaCompleta } from '../types';
 import {
@@ -35,6 +36,7 @@ interface SpellDetailModalProps {
   onEdit: (magia: MagiaCompleta) => void;
   onDelete: (magia: MagiaCompleta) => void;
   onDuplicate: (magia: MagiaCompleta) => void;
+  onPrintSingle?: (magia: MagiaCompleta) => void;
 }
 
 export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
@@ -44,6 +46,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
+  onPrintSingle,
 }) => {
   if (!isOpen || !magia) return null;
 
@@ -261,8 +264,18 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-3">
+        <div className="p-4 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
+            {onPrintSingle && (
+              <button
+                id="btn-detail-print"
+                onClick={() => onPrintSingle(magia)}
+                className="px-3 py-2 rounded bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/50 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                title="Imprimir ou gerar imagem deste card"
+              >
+                <Printer className="w-3.5 h-3.5" /> Imprimir / Card
+              </button>
+            )}
             <button
               id="btn-detail-duplicate"
               onClick={() => onDuplicate(magia)}

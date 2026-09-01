@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+@layer utilities {
+  @media print {
+    /* Oculta a interface do app na impressão e foca no modal de impressão */
+    body {
+      background: white !important;
+      color: black !important;
+      font-size: 12pt;
+    }
+
+    #main-navbar,
+    #desktop-filter-sidebar,
+    #active-filters-bar,
+    #toast-container,
+    header,
+    nav,
+    aside,
+    footer,
+    .print\:hidden {
+      display: none !important;
+    }
+
+    #print-export-modal {
+      position: static !important;
+      inset: auto !important;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      overflow: visible !important;
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      z-index: auto !important;
+    }
+
+    #print-export-content-body {
+      padding: 0 !important;
+      overflow: visible !important;
+      background: white !important;
+    }
+
+    .print-card-break {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    @page {
+      margin: 10mm;
+      size: auto;
+    }
+  }
+}
