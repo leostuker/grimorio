@@ -97,7 +97,16 @@ function initSeedMemoryDB() {
       ataque: false,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Uma explosão brilhante de fogo irrompe com um estrondo no ponto que você escolher dentro do alcance. Cada criatura em uma esfera de 6 metros de raio deve fazer um teste de resistência de Destreza.',
+      descricao: `Uma explosão brilhante de fogo irrompe com um estrondo no ponto que você escolher dentro do alcance. Cada criatura em uma esfera de 6 metros de raio centrada no ponto deve fazer um teste de resistência de **Destreza**.
+
+### Efeitos
+- **Falha na Resistência:** Sofre \`8d6\` de dano de fogo.
+- **Sucesso na Resistência:** Sofre metade do dano.
+
+> O fogo se espalha pelas esquinas e incendeia objetos inflamáveis na área que não estejam sendo usados ou carregados.
+
+### Em Níveis Superiores
+Quando você conjura esta magia usando um espaço de magia de **4º círculo ou superior**, o dano aumenta em \`1d6\` para cada círculo acima do 3º.`,
       dado_dano: 'd6',
       numero_dados_dano: 8,
       bonus_dano: 0,
@@ -129,7 +138,12 @@ function initSeedMemoryDB() {
       ataque: false,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Uma criatura que você tocar recupera um número de pontos de vida igual a 1d8 + seu modificador de habilidade de conjuração.',
+      descricao: `Uma criatura que você tocar recupera uma quantidade de pontos de vida igual a **\`1d8\` + seu modificador de habilidade de conjuração**.
+
+Esta magia não produz efeito em mortos-vivos ou constructos.
+
+### Em Níveis Superiores
+Quando você conjura esta magia usando um espaço de magia de **2º círculo ou superior**, a cura aumenta em \`1d8\` para cada círculo acima do 1º.`,
       dado_dano: 'd8',
       numero_dados_dano: 1,
       bonus_dano: 0,
@@ -165,7 +179,11 @@ function initSeedMemoryDB() {
       ataque: false,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Uma barreira invisível de força mágica surge e protege você. Até o início do seu próximo turno, você tem +5 de bônus na CA e não sofre dano de Mísseis Mágicos.',
+      descricao: `Uma barreira invisível de força mágica surge e protege você.
+
+### Efeitos
+- **Bônus na CA:** Você recebe **+5 de bônus na CA** até o início do seu próximo turno, incluindo contra o ataque que engatilhou a reação.
+- **Imunidade:** Você não sofre nenhum dano da magia *Mísseis Mágicos*.`,
       dado_dano: null,
       numero_dados_dano: null,
       bonus_dano: null,
@@ -197,7 +215,12 @@ function initSeedMemoryDB() {
       ataque: false,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Você cria três dardos brilhantes de força mágica. Cada dardo atinge uma criatura à sua escolha que você possa ver dentro do alcance, causando 1d4 + 1 de dano de energia.',
+      descricao: `Você cria **três dardos brilhantes** de pura força mágica.
+
+Cada dardo atinge uma criatura à sua escolha que você possa ver dentro do alcance. Um dardo causa **\`1d4 + 1\`** de dano de energia ao alvo. Todos os dardos atingem simultaneamente e você pode direcioná-los para uma mesma criatura ou para alvos distintos.
+
+### Em Níveis Superiores
+Ao conjurar usando um espaço de magia de **2º círculo ou superior**, a magia cria mais **1 dardo** para cada círculo acima do 1º.`,
       dado_dano: 'd4',
       numero_dados_dano: 3,
       bonus_dano: 3,
@@ -229,7 +252,13 @@ function initSeedMemoryDB() {
       ataque: true,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Um feixe de luz azul-esbranquiçada e gélida viaja em direção a uma criatura dentro do alcance. Realize um ataque à distância com magia contra o alvo. Se atingir, o alvo sofre 1d8 de dano de frio e sua velocidade é reduzida em 3 metros até o início do seu próximo turno.',
+      descricao: `Um feixe de luz azul-esbranquiçada e gélida viaja em direção a uma criatura dentro do alcance.
+
+Faça uma jogada de **ataque à distância com magia** contra o alvo:
+- **Acerto:** O alvo sofre **\`1d8\` de dano de frio** e sua velocidade de deslocamento é reduzida em **3 metros** até o início do seu próximo turno.
+
+### Evolução de Truque
+O dano da magia aumenta em \`1d8\` quando você atinge o 5º nível (\`2d8\`), 11º nível (\`3d8\`) e 17º nível (\`4d8\`).`,
       dado_dano: 'd8',
       numero_dados_dano: 1,
       bonus_dano: 0,
@@ -262,7 +291,14 @@ function initSeedMemoryDB() {
       ataque: false,
       id_livro: 1,
       nome_livro: 'Livro do Jogador (PHB)',
-      descricao: 'Uma criatura que você tocar se torna invisível até a magia acabar. Qualquer coisa que o alvo estiver vestindo ou carregando fica invisível enquanto estiver com ele. A magia termina se o alvo atacar ou conjurar uma magia.',
+      descricao: `Uma criatura que você tocar se torna **invisível** até a magia acabar.
+
+Qualquer coisa que o alvo estiver vestindo ou carregando permanece invisível enquanto estiver sob sua posse.
+
+> **Condição de Término:** A magia se encerra imediatamente para o alvo se ele realizar um ataque ou conjurar uma magia.
+
+### Em Níveis Superiores
+Ao conjurar usando um espaço de magia de **3º círculo ou superior**, você pode ter como alvo **uma criatura adicional** para cada círculo acima do 2º.`,
       dado_dano: null,
       numero_dados_dano: null,
       bonus_dano: null,

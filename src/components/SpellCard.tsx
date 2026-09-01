@@ -20,6 +20,7 @@ import {
   getEscolaColor,
   getTipoDanoBadgeClass,
   formatDanoFormula,
+  stripMarkdown,
 } from '../utils/magicHelpers';
 
 interface SpellCardProps {
@@ -179,9 +180,9 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             ))}
         </div>
 
-        {/* Descrição Curta */}
+        {/* Descrição Curta (Sanitizada de Markdown para preview) */}
         <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-3">
-          {magia.descricao}
+          {stripMarkdown(magia.descricao)}
         </p>
       </div>
 

@@ -12,7 +12,15 @@ import {
   KeyRound,
   AlertCircle,
   Coins,
+  Eye,
+  FileText,
+  Bold,
+  Italic,
+  List,
+  Heading,
+  Quote,
 } from 'lucide-react';
+import { MarkdownRenderer } from './MarkdownRenderer';
 import {
   MagiaCompleta,
   MagiaPayload,
@@ -78,6 +86,23 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
   const [pin, setPin] = useState(getSessionPin() || '1998');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [descriptionTab, setDescriptionTab] = useState<'write' | 'preview'>('write');
+
+  const insertMarkdownSnippet = (before: string, after: string = '') => {
+    const textarea = document.getElementById('textarea-descricao') as HTMLTextAreaElement | null;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentText = formData.descricao;
+    const selectedText = currentText.substring(start, end);
+    const replacement = `${before}${selectedText || 'texto'}${after}`;
+    const newText = currentText.substring(0, start) + replacement + currentText.substring(end);
+    setFormData({ ...formData, descricao: newText });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, start + before.length + (selectedText ? selectedText.length : 5));
+    }, 50);
+  };
 
   useEffect(() => {
     if (initialData) {
@@ -742,20 +767,119 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             </div>
           </div>
 
-          {/* 7. Descrição Completa */}
+          {/* 7. Descrição Completa (Suporte a Markdown) */}
           <div className="space-y-2">
-            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1.5">
-              7. Descrição e Efeitos da Magia
-            </h3>
-            <textarea
-              id="textarea-descricao"
-              required
-              rows={5}
-              value={formData.descricao}
-              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-              placeholder="Descreva detalhadamente os efeitos, alvos, dano em níveis superiores, etc."
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
-            />
+            <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 flex-wrap gap-2">
+              <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>7. Descrição e Efeitos da Magia</span>
+                <span className="text-[10px] font-mono font-normal text-indigo-300/80 bg-indigo-950/60 px-1.5 py-0.5 rounded border border-indigo-800/40">
+                  Markdown
+                </span>
+              </h3>
+
+              {/* Tabs Escrever / Visualizar */}
+              <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800">
+                <button
+                  type="button"
+                  id="btn-tab-write-markdown"
+                  onClick={() => setDescriptionTab('write')}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                    descriptionTab === 'write'
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Escrever</span>
+                </button>
+                <button
+                  type="button"
+                  id="btn-tab-preview-markdown"
+                  onClick={() => setDescriptionTab('preview')}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                    descriptionTab === 'preview'
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Pré-visualizar</span>
+                </button>
+              </div>
+            </div>
+
+            {descriptionTab === 'write' ? (
+              <div className="space-y-2">
+                {/* Markdown Formatting Toolbar */}
+                <div className="flex items-center gap-1 p-1 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('**', '**')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors"
+                    title="Negrito (**texto**)"
+                  >
+                    <Bold className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('*', '*')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors"
+                    title="Itálico (*texto*)"
+                  >
+                    <Italic className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('### ')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors"
+                    title="Subtítulo (### Título)"
+                  >
+                    <Heading className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('- ')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors"
+                    title="Lista com marcadores (- item)"
+                  >
+                    <List className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('> ')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors"
+                    title="Citação / Nota (> nota)"
+                  >
+                    <Quote className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertMarkdownSnippet('`', '`')}
+                    className="p-1.5 hover:text-indigo-300 hover:bg-slate-900 rounded transition-colors font-mono font-bold"
+                    title="Código / Dado em destaque (`2d8`)"
+                  >
+                    {'` `'}
+                  </button>
+                  <span className="text-[10px] text-slate-500 ml-auto pr-2 hidden sm:inline">
+                    Suporta negrito, subtítulos, listas, tabelas e dados
+                  </span>
+                </div>
+
+                <textarea
+                  id="textarea-descricao"
+                  required
+                  rows={6}
+                  value={formData.descricao}
+                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                  placeholder="Descreva detalhadamente os efeitos, alvos, dano em níveis superiores, etc. Use Markdown para formatar."
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
+                />
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl bg-slate-950 border border-slate-700 min-h-[160px] max-h-72 overflow-y-auto">
+                <MarkdownRenderer content={formData.descricao} />
+              </div>
+            )}
           </div>
 
           {/* 8. Trava de Segurança */}

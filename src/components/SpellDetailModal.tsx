@@ -26,6 +26,7 @@ import {
   formatDanoFormula,
   formatAtributoNome,
 } from '../utils/magicHelpers';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface SpellDetailModalProps {
   magia: MagiaCompleta | null;
@@ -219,13 +220,16 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
           </div>
 
-          {/* Spell Description */}
+          {/* Spell Description (Markdown) */}
           <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-              Descrição da Magia
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <span>Descrição da Magia</span>
+              <span className="text-[10px] font-mono font-normal text-indigo-400/80 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">
+                Formatado em Markdown
+              </span>
             </h4>
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
-              {magia.descricao}
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+              <MarkdownRenderer content={magia.descricao} />
             </div>
           </div>
 

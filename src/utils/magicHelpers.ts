@@ -131,3 +131,24 @@ export function formatAtributoNome(attr: Atributo): string {
     case 'CAR': return 'Carisma (CAR)';
   }
 }
+
+/**
+ * Remove sintaxe básica de markdown para renderizar resumos limpos em cards e tabelas
+ */
+export function stripMarkdown(md: string): string {
+  if (!md) return '';
+  return md
+    .replace(/#{1,6}\s+/g, '') // remove headings (# Titulo)
+    .replace(/\*\*(.*?)\*\*/g, '$1') // remove bold (**texto**)
+    .replace(/\*(.*?)\*/g, '$1') // remove italic (*texto*)
+    .replace(/__(.*?)__/g, '$1') // remove underline bold
+    .replace(/_(.*?)_/g, '$1') // remove underline italic
+    .replace(/`{1,3}(.*?)`{1,3}/g, '$1') // remove code (`código`)
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // remove links ([nome](url))
+    .replace(/^\s*[-*+]\s+/gm, '') // remove bullet points
+    .replace(/^\s*\d+\.\s+/gm, '') // remove numbered lists
+    .replace(/^\s*>\s+/gm, '') // remove blockquotes
+    .replace(/\|/g, ' ') // replace table pipes
+    .replace(/\s+/g, ' ') // normalize whitespace
+    .trim();
+}
