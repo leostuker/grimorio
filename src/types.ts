@@ -156,6 +156,30 @@ export interface FiltrosMagia {
   sort_order?: 'asc' | 'desc';
 }
 
+// Status de Conexão com o PostgreSQL
+export interface StatusConexao {
+  modo: 'postgres' | 'fallback_memoria';
+  mensagem: string;
+  host: string;
+  porta: number;
+  banco: string;
+  usuario: string;
+  temSenha?: boolean;
+  ultimoErro?: string;
+  codigoErro?: string;
+  detalhesErro?: string;
+  dicaSolucao?: string;
+  ultimaTentativa?: string;
+}
+
+export interface ResultadoTesteConexao {
+  sucesso: boolean;
+  mensagem: string;
+  codigo?: string;
+  detalhe?: string;
+  latenciaMs?: number;
+}
+
 // Metadata dinâmica do banco
 export interface MetadataBanco {
   conjuradores: Conjurador[];
@@ -166,14 +190,7 @@ export interface MetadataBanco {
   dados: readonly Dado[];
   formas: readonly Forma[];
   totalMagias: number;
-  statusConexao: {
-    modo: 'postgres' | 'fallback_memoria';
-    mensagem: string;
-    host: string;
-    porta: number;
-    banco: string;
-    usuario: string;
-  };
+  statusConexao: StatusConexao;
 }
 
 // Resposta de importação CSV

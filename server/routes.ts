@@ -10,6 +10,8 @@ import {
   deleteMagia,
   createConjurador,
   createLivro,
+  testDatabaseConnection,
+  reconnectToDatabase,
 } from './db.js';
 import { processCSVImport, generateCSVExport } from './csv.js';
 import { FiltrosMagia, MagiaPayload } from '../src/types.js';
@@ -38,6 +40,50 @@ function verifyPin(req: Request, res: Response, next: Function) {
 // 1. Status do Banco
 router.get('/status', (req, res) => {
   res.json(getDbStatus());
+});
+
+router.get('/db/status', (req, res) => {
+  res.json(getDbStatus());
+});
+
+// Testar conexão com parâmetros específicos
+router.post('/db/test', async (req, res) => {
+  try {
+    const { host, port, user, password, database, ssl } = req.body || {};
+    const resultado = await testDatabaseConnection({
+      host,
+      port,
+      user,
+      password,
+      database,
+      ssl,
+    });
+    res.json(resultado);
+  } catch (err: any) {
+    res.status(500).json({
+      sucesso: false,
+      mensagem: err?.message || 'Erro interno ao testar conexão',
+    });
+  }
+});
+
+// Forçar reconexão do pool ativo
+router.post('/db/reconnect', async (req, res) => {
+  try {
+    const { host, port, user, password, database } = req.body || {};
+    const novoStatus = await reconnectToDatabase({
+      host,
+      port,
+      user,
+      password,
+      database,
+    });
+    res.json(novoStatus);
+  } catch (err: any) {
+    res.status(500).json({
+      error: err?.message || 'Erro ao reconectar ao banco de dados',
+    });
+  }
 });
 
 // 2. Metadata Dinâmica (Conjuradores, Livros, Enums)

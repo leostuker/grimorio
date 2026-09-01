@@ -22,6 +22,7 @@ interface NavbarProps {
   onOpenImportCSV: () => void;
   onOpenManageEntities: () => void;
   onOpenDocSchema: () => void;
+  onOpenDbModal: () => void;
   onExportCSV: () => void;
 }
 
@@ -33,6 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenImportCSV,
   onOpenManageEntities,
   onOpenDocSchema,
+  onOpenDbModal,
   onExportCSV,
 }) => {
   const isPostgres = metadata?.statusConexao?.modo === 'postgres';
@@ -56,15 +58,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            {/* DB Connection Indicator Badge */}
+            {/* DB Connection Indicator Badge (Clickable) */}
             {metadata && (
-              <div
+              <button
+                type="button"
                 id="badge-db-connection"
-                title={metadata.statusConexao.mensagem}
-                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border font-medium cursor-help transition-all ${
+                onClick={onOpenDbModal}
+                title="Clique para abrir o Diagnóstico e Configurações de Conexão com o PostgreSQL"
+                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border font-medium transition-all ${
                   isPostgres
-                    ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/60'
-                    : 'bg-amber-950/60 border-amber-700/60 text-amber-300 hover:bg-amber-900/60'
+                    ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-500'
+                    : 'bg-amber-950/60 border-amber-700/60 text-amber-300 hover:bg-amber-900/60 hover:border-amber-500 animate-pulse'
                 }`}
               >
                 {isPostgres ? (
@@ -72,8 +76,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <Database className="w-3.5 h-3.5 text-amber-400" />
                 )}
-                <span>{isPostgres ? 'PostgreSQL 16 Conectado' : 'Modo Demonstração (Memória)'}</span>
-              </div>
+                <span>{isPostgres ? 'PostgreSQL 16 Conectado' : 'Modo Fallback (Memória)'}</span>
+              </button>
             )}
           </div>
 
@@ -95,6 +99,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
             
+            <button
+              id="btn-nav-db-diagnostic"
+              onClick={onOpenDbModal}
+              className={`p-2 rounded-xl border text-xs font-medium transition-colors flex items-center gap-1.5 ${
+                isPostgres
+                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-emerald-400'
+                  : 'bg-amber-950/40 hover:bg-amber-900/50 border-amber-800/60 text-amber-300'
+              }`}
+              title="Diagnóstico e Status de Conexão com o Banco de Dados"
+            >
+              <Database className={`w-4 h-4 ${isPostgres ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <span className="hidden xl:inline">{isPostgres ? 'Banco Conectado' : 'Conexão Banco'}</span>
+            </button>
+
             <button
               id="btn-nav-manage-entities"
               onClick={onOpenManageEntities}

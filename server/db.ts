@@ -28,13 +28,17 @@ const DB_CONFIG = {
   user: process.env.DB_USER || 'leo',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'postgres',
-  connectionTimeoutMillis: 3000,
+  connectionTimeoutMillis: 4000,
   query_timeout: 5000,
 };
 
+let activeDbConfig = { ...DB_CONFIG };
 let pool: pg.Pool | null = null;
 let isConnectedToPostgres = false;
 let connectionErrorMsg = '';
+let connectionErrorCode = '';
+let connectionErrorDetail = '';
+let lastAttemptTime: string = new Date().toISOString();
 
 // Banco em memória para fallback/sandbox quando o IP 192.168.0.153 não estiver acessível
 interface MemoryDB {
@@ -364,16 +368,27 @@ CREATE TABLE IF NOT EXISTS "public"."magias_tipo_dano" (
 `;
 
 export async function initDatabaseConnection(): Promise<void> {
-  console.log(`[DB] Tentando conectar ao PostgreSQL em ${DB_CONFIG.host}:${DB_CONFIG.port} como '${DB_CONFIG.user}'...`);
+  lastAttemptTime = new Date().toISOString();
+  console.log(`[DB] Tentando conectar ao PostgreSQL em ${activeDbConfig.host}:${activeDbConfig.port} como '${activeDbConfig.user}' (Banco: '${activeDbConfig.database}')...`);
 
   try {
-    pool = new Pool(DB_CONFIG);
+    if (pool) {
+      try {
+        await pool.end();
+      } catch (e) {
+        // ignore
+      }
+    }
 
-    // Testar conexão inicial com timeout curto
+    pool = new Pool(activeDbConfig);
+
+    // Testar conexão inicial com timeout
     const client = await pool.connect();
     console.log('[DB] Conexão com PostgreSQL 16 estabelecida com sucesso!');
     isConnectedToPostgres = true;
     connectionErrorMsg = '';
+    connectionErrorCode = '';
+    connectionErrorDetail = '';
 
     // Garantir que as tabelas e tipos existam
     await client.query(INIT_SCHEMA_SQL);
@@ -381,7 +396,7 @@ export async function initDatabaseConnection(): Promise<void> {
     // Se estiver vazio, inserir livros e conjuradores base
     const conjRes = await client.query('SELECT COUNT(*) FROM "public"."conjuradores"');
     if (parseInt(conjRes.rows[0].count, 10) === 0) {
-      console.log('[DB] Inserindo conjuradores padrão...');
+      console.log('[DB] Inserindo conjuradores padrão no PostgreSQL...');
       for (const c of memoryDB.conjuradores) {
         await client.query('INSERT INTO "public"."conjuradores" (classe) VALUES ($1)', [c.classe]);
       }
@@ -389,7 +404,7 @@ export async function initDatabaseConnection(): Promise<void> {
 
     const livRes = await client.query('SELECT COUNT(*) FROM "public"."livros"');
     if (parseInt(livRes.rows[0].count, 10) === 0) {
-      console.log('[DB] Inserindo livros padrão...');
+      console.log('[DB] Inserindo livros padrão no PostgreSQL...');
       for (const l of memoryDB.livros) {
         await client.query('INSERT INTO "public"."livros" (nome_livro) VALUES ($1)', [l.nome_livro]);
       }
@@ -399,21 +414,124 @@ export async function initDatabaseConnection(): Promise<void> {
   } catch (err: any) {
     isConnectedToPostgres = false;
     connectionErrorMsg = err?.message || 'Falha ao conectar ao PostgreSQL';
-    console.warn(`[DB] PostgreSQL em ${DB_CONFIG.host}:${DB_CONFIG.port} inacessível (${connectionErrorMsg}). Ativando modo local em memória para demonstração.`);
+    connectionErrorCode = err?.code || 'CONNECTION_FAILED';
+    connectionErrorDetail = err?.detail || err?.hint || '';
+    console.warn(`[DB] PostgreSQL em ${activeDbConfig.host}:${activeDbConfig.port} inacessível (${connectionErrorMsg}). Código: ${connectionErrorCode}. Ativando modo local em memória para demonstração.`);
   }
 }
 
-// Retorna o status atual da conexão
+// Testar conexão temporária sem alterar o pool principal
+export async function testDatabaseConnection(configOverride: {
+  host?: string;
+  port?: number | string;
+  user?: string;
+  password?: string;
+  database?: string;
+  ssl?: boolean;
+}): Promise<{
+  sucesso: boolean;
+  mensagem: string;
+  codigo?: string;
+  detalhe?: string;
+  latenciaMs?: number;
+}> {
+  const startTime = Date.now();
+  const testConfig = {
+    host: configOverride.host || activeDbConfig.host,
+    port: parseInt(String(configOverride.port || activeDbConfig.port), 10),
+    user: configOverride.user || activeDbConfig.user,
+    password: configOverride.password !== undefined ? configOverride.password : activeDbConfig.password,
+    database: configOverride.database || activeDbConfig.database,
+    connectionTimeoutMillis: 4000,
+    query_timeout: 4000,
+    ssl: configOverride.ssl ? { rejectUnauthorized: false } : undefined,
+  };
+
+  const testPool = new Pool(testConfig);
+  try {
+    const client = await testPool.connect();
+    const result = await client.query('SELECT version(), current_database(), current_user');
+    client.release();
+    await testPool.end();
+    const latenciaMs = Date.now() - startTime;
+
+    return {
+      sucesso: true,
+      mensagem: `Conexão bem-sucedida! PostgreSQL respondendo em ${latenciaMs}ms (Usuário: ${result.rows[0]?.current_user}, Banco: ${result.rows[0]?.current_database})`,
+      latenciaMs,
+    };
+  } catch (err: any) {
+    try {
+      await testPool.end();
+    } catch {}
+
+    return {
+      sucesso: false,
+      mensagem: err?.message || 'Falha ao conectar',
+      codigo: err?.code || 'CONNECTION_ERROR',
+      detalhe: err?.detail || err?.hint || undefined,
+      latenciaMs: Date.now() - startTime,
+    };
+  }
+}
+
+// Reconectar aplicando novas configurações se fornecidas
+export async function reconnectToDatabase(configOverride?: {
+  host?: string;
+  port?: number | string;
+  user?: string;
+  password?: string;
+  database?: string;
+}): Promise<ReturnType<typeof getDbStatus>> {
+  if (configOverride) {
+    activeDbConfig = {
+      ...activeDbConfig,
+      ...(configOverride.host ? { host: configOverride.host } : {}),
+      ...(configOverride.port ? { port: parseInt(String(configOverride.port), 10) } : {}),
+      ...(configOverride.user ? { user: configOverride.user } : {}),
+      ...(configOverride.password !== undefined ? { password: configOverride.password } : {}),
+      ...(configOverride.database ? { database: configOverride.database } : {}),
+    };
+  }
+
+  await initDatabaseConnection();
+  return getDbStatus();
+}
+
+// Retorna o status atual e detalhado da conexão
 export function getDbStatus() {
+  let dicaSolucao = '';
+  if (!isConnectedToPostgres) {
+    if (connectionErrorCode === 'ECONNREFUSED') {
+      dicaSolucao = `A porta ${activeDbConfig.port} no host ${activeDbConfig.host} recusou a conexão. Verifique se o serviço do PostgreSQL está iniciado e escutando na porta correta.`;
+    } else if (connectionErrorCode === 'ETIMEDOUT') {
+      dicaSolucao = `Tempo limite esgotado ao tentar alcançar ${activeDbConfig.host}:${activeDbConfig.port}. Se o banco está na sua máquina local e a aplicação na nuvem, o IP privado (192.168.x.x) não é roteável pela internet. Se estiver rodando o app localmente via 'npm run dev', verifique se o firewall permite tráfego na porta ${activeDbConfig.port}.`;
+    } else if (connectionErrorCode === '28P01' || connectionErrorMsg.includes('password authentication failed')) {
+      dicaSolucao = `Falha de autenticação de senha para o usuário '${activeDbConfig.user}'. Preencha a variável DB_PASSWORD no arquivo .env ou no painel de diagnóstico.`;
+    } else if (connectionErrorCode === '3D000' || connectionErrorMsg.includes('database') && connectionErrorMsg.includes('does not exist')) {
+      dicaSolucao = `O banco de dados '${activeDbConfig.database}' não existe no servidor PostgreSQL. Crie-o com 'CREATE DATABASE ${activeDbConfig.database};'.`;
+    } else if (connectionErrorCode === 'ENOTFOUND') {
+      dicaSolucao = `O endereço host '${activeDbConfig.host}' não pôde ser resolvido por DNS. Verifique a digitação do host (ex: localhost ou 127.0.0.1 se for local).`;
+    } else {
+      dicaSolucao = `Verifique se as credenciais no .env (DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME) correspondem à sua instância do PostgreSQL.`;
+    }
+  }
+
   return {
     modo: (isConnectedToPostgres ? 'postgres' : 'fallback_memoria') as 'postgres' | 'fallback_memoria',
     mensagem: isConnectedToPostgres
-      ? `Conectado com sucesso ao PostgreSQL 16 em ${DB_CONFIG.host}:${DB_CONFIG.port}`
-      : `Executando em Modo Demonstração (Memória) — Servidor em ${DB_CONFIG.host}:${DB_CONFIG.port} não pôde ser alcançado diretamente da nuvem.`,
-    host: DB_CONFIG.host,
-    porta: DB_CONFIG.port,
-    banco: DB_CONFIG.database,
-    usuario: DB_CONFIG.user,
+      ? `Conectado com sucesso ao PostgreSQL 16 em ${activeDbConfig.host}:${activeDbConfig.port}`
+      : `Modo Fallback em Memória ativo — Não foi possível comunicar com o PostgreSQL em ${activeDbConfig.host}:${activeDbConfig.port}.`,
+    host: activeDbConfig.host,
+    porta: activeDbConfig.port,
+    banco: activeDbConfig.database,
+    usuario: activeDbConfig.user,
+    temSenha: Boolean(activeDbConfig.password && activeDbConfig.password.length > 0),
+    ultimoErro: connectionErrorMsg || undefined,
+    codigoErro: connectionErrorCode || undefined,
+    detalhesErro: connectionErrorDetail || undefined,
+    dicaSolucao: dicaSolucao || undefined,
+    ultimaTentativa: lastAttemptTime,
   };
 }
 

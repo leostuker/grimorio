@@ -6,6 +6,8 @@ import {
   ResultadoImportacaoCSV,
   Conjurador,
   Livro,
+  StatusConexao,
+  ResultadoTesteConexao,
 } from '../types';
 
 let sessionPin: string = '';
@@ -18,9 +20,48 @@ export function getSessionPin(): string {
   return sessionPin;
 }
 
-export async function fetchStatus() {
-  const res = await fetch('/api/status');
+export async function fetchStatus(): Promise<StatusConexao> {
+  const res = await fetch('/api/db/status');
   if (!res.ok) throw new Error('Falha ao obter status do banco');
+  return res.json();
+}
+
+export async function testDatabaseConnectionAPI(params: {
+  host?: string;
+  port?: number | string;
+  user?: string;
+  password?: string;
+  database?: string;
+  ssl?: boolean;
+}): Promise<ResultadoTesteConexao> {
+  const res = await fetch('/api/db/test', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.mensagem || 'Falha ao testar conexão');
+  }
+  return res.json();
+}
+
+export async function reconnectDatabaseAPI(params?: {
+  host?: string;
+  port?: number | string;
+  user?: string;
+  password?: string;
+  database?: string;
+}): Promise<StatusConexao> {
+  const res = await fetch('/api/db/reconnect', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params || {}),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Falha ao reconectar ao PostgreSQL');
+  }
   return res.json();
 }
 

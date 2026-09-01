@@ -40,6 +40,7 @@ import { CsvImportModal } from './components/CsvImportModal';
 import { ManageEntitiesModal } from './components/ManageEntitiesModal';
 import { SchemaDocModal } from './components/SchemaDocModal';
 import { SecurityPinModal } from './components/SecurityPinModal';
+import { DbConnectionModal } from './components/DbConnectionModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import { formatCirculo, getEscolaColor } from './utils/magicHelpers';
 
@@ -64,6 +65,7 @@ export default function App() {
   const [isCsvImportOpen, setIsCsvImportOpen] = useState(false);
   const [isManageEntitiesOpen, setIsManageEntitiesOpen] = useState(false);
   const [isDocSchemaOpen, setIsDocSchemaOpen] = useState(false);
+  const [isDbModalOpen, setIsDbModalOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Trava de Segurança Modal
@@ -211,8 +213,34 @@ export default function App() {
         onOpenImportCSV={() => setIsCsvImportOpen(true)}
         onOpenManageEntities={() => setIsManageEntitiesOpen(true)}
         onOpenDocSchema={() => setIsDocSchemaOpen(true)}
+        onOpenDbModal={() => setIsDbModalOpen(true)}
         onExportCSV={handleExportCSV}
       />
+
+      {/* Database Connection Notice Banner (when not connected to real PostgreSQL) */}
+      {metadata && metadata.statusConexao?.modo !== 'postgres' && (
+        <div
+          id="banner-db-fallback-notice"
+          className="bg-amber-950/80 border-b border-amber-800/60 px-4 py-2 text-xs text-amber-200 flex flex-wrap items-center justify-between gap-3 shadow-inner"
+        >
+          <div className="flex items-center gap-2">
+            <Database className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>
+              <strong>Atenção:</strong> O app está em <em>Modo Fallback (Memória)</em> porque não conseguiu conectar ao PostgreSQL em{' '}
+              <code className="bg-slate-950/70 px-1.5 py-0.5 rounded font-mono text-amber-300">
+                {metadata.statusConexao.host}:{metadata.statusConexao.porta}
+              </code>.
+            </span>
+          </div>
+          <button
+            id="btn-banner-diagnose-db"
+            onClick={() => setIsDbModalOpen(true)}
+            className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shrink-0 shadow-sm"
+          >
+            Diagnosticar / Conectar DB
+          </button>
+        </div>
+      )}
 
       {/* Main Container */}
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
@@ -539,7 +567,19 @@ export default function App() {
         onClose={() => setIsDocSchemaOpen(false)}
       />
 
-      {/* 6. Modal da Trava de Segurança (PIN 1998) */}
+      {/* 6. Modal de Conexão e Diagnóstico do Banco de Dados PostgreSQL */}
+      <DbConnectionModal
+        isOpen={isDbModalOpen}
+        onClose={() => setIsDbModalOpen(false)}
+        status={metadata?.statusConexao || null}
+        onRefreshStatus={async () => {
+          await loadMetadata();
+          await loadMagias();
+          addToast('info', 'Status Atualizado', 'Verificação de conexão com o banco realizada.');
+        }}
+      />
+
+      {/* 7. Modal da Trava de Segurança (PIN 1998) */}
       <SecurityPinModal
         isOpen={isPinModalOpen}
         onClose={() => {
