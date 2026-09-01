@@ -13,8 +13,8 @@ services:
       - DB_HOST=192.168.0.153
       - DB_PORT=6532
       - DB_USER=leo
-      - DB_PASSWORD=sua_senha_aqui
-      - DB_NAME=postgres
+      - DB_PASSWORD=1998
+      - DB_NAME=dndmagias
       - SECURITY_PIN=1998
     # Se o PostgreSQL estiver no host ou na mesma rede local
     extra_hosts:
