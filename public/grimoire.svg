@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="grimoireCover" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3730a3" />
+      <stop offset="45%" stop-color="#2e1065" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="grimoireSpine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#4338ca" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="grimoireGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#eab308" />
+      <stop offset="80%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </linearGradient>
+    <radialGradient id="grimoireGemGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="40%" stop-color="#0284c7" />
+      <stop offset="80%" stop-color="#0369a1" />
+      <stop offset="100%" stop-color="#0c4a6e" />
+    </radialGradient>
+    <linearGradient id="grimoireRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="100%" stop-color="#be123c" />
+    </linearGradient>
+  </defs>
+  <rect x="12" y="10" width="42" height="48" rx="5" fill="#09090b" opacity="0.4" />
+  <rect x="16" y="8" width="37" height="47" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.75" />
+  <path d="M32 46 L32 58 L36 55 L40 58 L40 46 Z" fill="url(#grimoireRibbon)" stroke="#9f1239" stroke-width="0.5" />
+  <rect x="11" y="7" width="41" height="49" rx="4" fill="#1e1b4b" stroke="#312e81" stroke-width="1" />
+  <rect x="13" y="6" width="38" height="49" rx="3.5" fill="url(#grimoireCover)" stroke="#4f46e5" stroke-width="1" />
+  <path d="M13 6 Q10 6 10 9.5 L10 51.5 Q10 55 13 55 L16 55 L16 6 Z" fill="url(#grimoireSpine)" stroke="#6366f1" stroke-width="0.75" />
+  <line x1="10" y1="14" x2="16" y2="14" stroke="url(#grimoireGold)" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="10" y1="23" x2="16" y2="23" stroke="url(#grimoireGold)" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="10" y1="38" x2="16" y2="38" stroke="url(#grimoireGold)" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="10" y1="47" x2="16" y2="47" stroke="url(#grimoireGold)" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M17 7 L23 7 L17 13 Z" fill="url(#grimoireGold)" />
+  <path d="M49 7 L43 7 L49 13 Z" fill="url(#grimoireGold)" />
+  <path d="M49 53 L43 53 L49 47 Z" fill="url(#grimoireGold)" />
+  <path d="M17 53 L23 53 L17 47 Z" fill="url(#grimoireGold)" />
+  <rect x="18" y="10" width="28" height="40" rx="2" fill="none" stroke="url(#grimoireGold)" stroke-width="0.75" stroke-dasharray="2 0.75" opacity="0.85" />
+  <circle cx="32" cy="30" r="10" fill="none" stroke="url(#grimoireGold)" stroke-width="0.8" />
+  <polygon points="32,22 34.5,27.5 40,30 34.5,32.5 32,38 29.5,32.5 24,30 29.5,27.5" fill="none" stroke="url(#grimoireGold)" stroke-width="0.75" />
+  <circle cx="32" cy="30" r="4.5" fill="url(#grimoireGemGlow)" stroke="#e0f2fe" stroke-width="0.75" />
+  <polygon points="32,27 34.5,30 32,33 29.5,30" fill="#bae6fd" opacity="0.9" />
+  <circle cx="31" cy="29" r="1" fill="#ffffff" />
+</svg>
