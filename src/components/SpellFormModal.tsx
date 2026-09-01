@@ -21,6 +21,7 @@ import {
   Quote,
 } from 'lucide-react';
 import { MarkdownRenderer } from './MarkdownRenderer';
+import { ClassPictogram } from './ClassPictogram';
 import {
   MagiaCompleta,
   MagiaPayload,
@@ -733,33 +734,56 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             </div>
           </div>
 
-          {/* 6. Conjuradores (Tabela N:M) */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1.5 flex items-center justify-between">
-              <span>6. Classes de Conjuradores (Tabela N:M `magias_conjuradores`)</span>
-              <span className="text-[11px] font-normal text-slate-400">
-                {formData.conjuradores_ids.length} selecionada(s)
-              </span>
-            </h3>
+          {/* 6. Conjuradores (Tabela N:M - Organizados em 3 Colunas com Pictogramas) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 flex-wrap gap-2">
+              <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-emerald-400" />
+                <span>6. Classes de Conjuradores (Tabela N:M `magias_conjuradores`)</span>
+              </h3>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-normal text-slate-400">
+                  {formData.conjuradores_ids.length} selecionada(s)
+                </span>
+                <button
+                  type="button"
+                  id="btn-form-toggle-all-casters"
+                  onClick={() => {
+                    const allIds = (metadata?.conjuradores || []).map((c) => c.id_conjurador);
+                    if (formData.conjuradores_ids.length === allIds.length) {
+                      setFormData({ ...formData, conjuradores_ids: [] });
+                    } else {
+                      setFormData({ ...formData, conjuradores_ids: [...allIds] });
+                    }
+                  }}
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800/60"
+                >
+                  {formData.conjuradores_ids.length === (metadata?.conjuradores || []).length
+                    ? 'Desmarcar Todas'
+                    : 'Marcar Todas'}
+                </button>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 rounded-xl bg-slate-950 border border-slate-800 max-h-48 overflow-y-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 max-h-56 overflow-y-auto">
               {(metadata?.conjuradores || []).map((c) => {
                 const selected = formData.conjuradores_ids.includes(c.id_conjurador);
                 return (
                   <label
                     key={c.id_conjurador}
-                    className={`flex items-center gap-2 p-2 rounded-lg border text-xs cursor-pointer select-none transition-all ${
+                    className={`flex items-center gap-2.5 p-2 rounded-xl border text-xs cursor-pointer select-none transition-all ${
                       selected
-                        ? 'bg-emerald-950/70 border-emerald-600 text-emerald-200 font-semibold'
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                        ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 font-semibold ring-1 ring-emerald-500/30 shadow-sm'
+                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={selected}
                       onChange={() => toggleConjurador(c.id_conjurador)}
-                      className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-400"
+                      className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-400 shrink-0"
                     />
+                    <ClassPictogram classe={c.classe} size="xs" />
                     <span className="truncate">{c.classe}</span>
                   </label>
                 );
