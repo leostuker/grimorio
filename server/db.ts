@@ -556,8 +556,8 @@ export function getDbStatus() {
   return {
     modo: (isConnectedToPostgres ? 'postgres' : 'fallback_memoria') as 'postgres' | 'fallback_memoria',
     mensagem: isConnectedToPostgres
-      ? `Conectado com sucesso ao PostgreSQL 16 em ${activeDbConfig.host}:${activeDbConfig.port}`
-      : `Modo Fallback em Memória ativo — Não foi possível comunicar com o PostgreSQL em ${activeDbConfig.host}:${activeDbConfig.port}.`,
+      ? `Conectado com sucesso ao banco de dados PostgreSQL.`
+      : `Modo Fallback em Memória ativo — Não foi possível comunicar com o banco de dados.`,
     host: activeDbConfig.host,
     porta: activeDbConfig.port,
     banco: activeDbConfig.database,

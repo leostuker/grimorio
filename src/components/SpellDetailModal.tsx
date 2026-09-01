@@ -69,25 +69,9 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
         {/* Header Ribbon */}
         <div className={`p-6 border-b border-slate-800 ${escolaColor.bg}`}>
           <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 flex-wrap mb-2">
-                <span className="text-xs font-bold px-3 py-1 rounded bg-indigo-600 text-white shadow-sm">
-                  {formatCirculo(magia.circulo)}
-                </span>
-                <span className={`text-xs font-semibold px-3 py-1 rounded border ${escolaColor.badge}`}>
-                  {magia.escola}
-                </span>
-                {magia.concentracao && (
-                  <span className="text-xs font-semibold px-3 py-1 rounded bg-indigo-950 text-indigo-300 border border-indigo-600/50">
-                    Concentração
-                  </span>
-                )}
-              </div>
-
-              <h2 className="text-2xl font-black text-slate-100 tracking-tight">
-                {magia.nome_magia}
-              </h2>
-            </div>
+            <h2 className="text-2xl font-black text-slate-100 tracking-tight">
+              {magia.nome_magia}
+            </h2>
 
             <button
               id="btn-close-detail-modal"
@@ -176,8 +160,22 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             </div>
           )}
 
-          {/* Combat, Saves, Damage */}
+          {/* Círculo, Escola, Concentração, Combate, Salvaguarda e Dano */}
           <div className="flex flex-wrap gap-2 items-center">
+            {/* Círculo e Escola no início da linha de especificações */}
+            <span className="text-xs font-bold px-3 py-1.5 rounded bg-indigo-600 text-white shadow-xs whitespace-nowrap">
+              {formatCirculo(magia.circulo)}
+            </span>
+            <span className={`text-xs font-semibold px-3 py-1.5 rounded border whitespace-nowrap ${escolaColor.badge}`}>
+              {magia.escola}
+            </span>
+
+            {magia.concentracao && (
+              <span className="text-xs font-semibold px-3 py-1.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-600/50 whitespace-nowrap">
+                Concentração
+              </span>
+            )}
+
             {magia.salvaguarda && (
               <div className="px-3 py-1.5 rounded bg-cyan-950/70 border border-cyan-700/50 text-cyan-300 text-xs flex items-center gap-2">
                 <Shield className="w-4 h-4 text-cyan-400" />
@@ -220,13 +218,10 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
           </div>
 
-          {/* Spell Description (Markdown) */}
+          {/* Spell Description */}
           <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-              <span>Descrição da Magia</span>
-              <span className="text-[10px] font-mono font-normal text-indigo-400/80 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">
-                Formatado em Markdown
-              </span>
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              Descrição da Magia
             </h4>
             <div className="p-4 rounded bg-slate-950 border border-slate-800 shadow-inner">
               <MarkdownRenderer content={magia.descricao} />
@@ -280,7 +275,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
               id="btn-detail-delete"
               onClick={() => onDelete(magia)}
               className="px-3 py-2 rounded bg-rose-950/70 hover:bg-rose-900/90 text-rose-300 border border-rose-800/60 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-              title="Apagar magia (Exige PIN 1998)"
+              title="Apagar magia (Exige Senha de Segurança)"
             >
               <Trash2 className="w-3.5 h-3.5" /> Apagar
             </button>

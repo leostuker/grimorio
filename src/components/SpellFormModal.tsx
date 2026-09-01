@@ -36,7 +36,7 @@ import {
   DADOS,
   FORMAS,
 } from '../types';
-import { getSessionPin } from '../services/api';
+import { getSessionPin, setSessionPin } from '../services/api';
 
 interface SpellFormModalProps {
   isOpen: boolean;
@@ -83,7 +83,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
     tipos_dano: [],
   });
 
-  const [pin, setPin] = useState(getSessionPin() || '1998');
+  const [pin, setPin] = useState(getSessionPin());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [descriptionTab, setDescriptionTab] = useState<'write' | 'preview'>('write');
@@ -179,7 +179,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
       return;
     }
     if (!pin.trim()) {
-      setError('A senha de segurança (1998) é obrigatória para salvar.');
+      setError('A senha de segurança é obrigatória para salvar.');
       return;
     }
 
@@ -188,6 +188,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
 
     try {
       await onSubmit(formData, pin.trim());
+      setSessionPin(pin.trim());
       onClose();
     } catch (err: any) {
       setError(err?.message || 'Erro ao salvar magia.');
@@ -882,10 +883,10 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
           <div className="p-4 rounded bg-indigo-950/30 border border-indigo-500/40 space-y-3">
             <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
               <Lock className="w-4 h-4" />
-              <span>Trava de Segurança Obrigatória (PIN 1998)</span>
+              <span>Trava de Segurança Obrigatória</span>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Conforme as regras de segurança, digite a senha "1998" para autorizar esta alteração no banco de dados.
+              Digite a senha de segurança para autorizar esta alteração no banco de dados.
             </p>
             <div className="relative max-w-xs">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -897,7 +898,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                 required
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                placeholder="1998"
+                placeholder="••••"
                 className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
             </div>

@@ -22,7 +22,6 @@ interface NavbarProps {
   onOpenImportCSV: () => void;
   onOpenManageEntities: () => void;
   onOpenDocSchema: () => void;
-  onOpenDbModal: () => void;
   onExportCSV: () => void;
 }
 
@@ -34,51 +33,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenImportCSV,
   onOpenManageEntities,
   onOpenDocSchema,
-  onOpenDbModal,
   onExportCSV,
 }) => {
-  const isPostgres = metadata?.statusConexao?.modo === 'postgres';
-
   return (
     <header id="main-navbar" className="sticky top-0 z-40 bg-slate-950/95 border-b border-slate-800 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           
-          {/* Logo & Status */}
-          <div className="flex items-center gap-4 shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-md bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 font-bold">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="text-lg font-black tracking-wider text-slate-100 uppercase">Grimório</span>
-                <span className="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
-                  PG 16
-                </span>
-              </div>
+          {/* Logo */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="w-10 h-10 rounded-md bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 font-bold">
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
-
-            {/* DB Connection Indicator Badge (Clickable) */}
-            {metadata && (
-              <button
-                type="button"
-                id="badge-db-connection"
-                onClick={onOpenDbModal}
-                title="Clique para abrir o Diagnóstico e Configurações de Conexão com o PostgreSQL"
-                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded text-xs border font-medium transition-all ${
-                  isPostgres
-                    ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-500'
-                    : 'bg-indigo-950/70 border-indigo-700/60 text-indigo-300 hover:bg-indigo-900/70 hover:border-indigo-500 animate-pulse'
-                }`}
-              >
-                {isPostgres ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                ) : (
-                  <Database className="w-3.5 h-3.5 text-indigo-400" />
-                )}
-                <span>{isPostgres ? 'PostgreSQL 16 Conectado' : 'Modo Fallback (Memória)'}</span>
-              </button>
-            )}
+            <div>
+              <span className="text-lg font-black tracking-wider text-slate-100 uppercase">Grimório</span>
+              <span className="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+                D&D 5e
+              </span>
+            </div>
           </div>
 
           {/* Quick Search Input */}
@@ -98,21 +70,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
-            
-            <button
-              id="btn-nav-db-diagnostic"
-              onClick={onOpenDbModal}
-              className={`p-2 rounded border text-xs font-medium transition-colors flex items-center gap-1.5 ${
-                isPostgres
-                  ? 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-emerald-400'
-                  : 'bg-indigo-950/60 hover:bg-indigo-900/70 border-indigo-800/70 text-indigo-300'
-              }`}
-              title="Diagnóstico e Status de Conexão com o Banco de Dados"
-            >
-              <Database className={`w-4 h-4 ${isPostgres ? 'text-emerald-400' : 'text-indigo-400'}`} />
-              <span className="hidden xl:inline">{isPostgres ? 'Banco Conectado' : 'Conexão Banco'}</span>
-            </button>
-
             <button
               id="btn-nav-manage-entities"
               onClick={onOpenManageEntities}
@@ -155,11 +112,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="btn-nav-doc-schema"
               onClick={onOpenDocSchema}
               className="p-2 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-indigo-400 transition-colors"
-              title="Documentação do Schema, CSV e Docker"
+              title="Documentação do Schema e CSV"
             >
               <HelpCircle className="w-5 h-5" />
             </button>
-
           </div>
 
         </div>

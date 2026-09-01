@@ -10,7 +10,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { MetadataBanco } from '../types';
-import { createConjuradorAPI, createLivroAPI, getSessionPin } from '../services/api';
+import { createConjuradorAPI, createLivroAPI, getSessionPin, setSessionPin } from '../services/api';
 
 interface ManageEntitiesModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
   const [activeTab, setActiveTab] = useState<'conjuradores' | 'livros'>('conjuradores');
   const [newClasse, setNewClasse] = useState('');
   const [newLivro, setNewLivro] = useState('');
-  const [pin, setPin] = useState(getSessionPin() || '1998');
+  const [pin, setPin] = useState(getSessionPin());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
     e.preventDefault();
     if (!newClasse.trim()) return;
     if (!pin.trim()) {
-      setError('A senha de segurança (1998) é obrigatória.');
+      setError('A senha de segurança é obrigatória.');
       return;
     }
 
@@ -49,6 +49,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
 
     try {
       await createConjuradorAPI(newClasse.trim(), pin.trim());
+      setSessionPin(pin.trim());
       setSuccess(`Classe "${newClasse.trim()}" cadastrada com sucesso!`);
       setNewClasse('');
       onEntityCreated();
@@ -63,7 +64,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
     e.preventDefault();
     if (!newLivro.trim()) return;
     if (!pin.trim()) {
-      setError('A senha de segurança (1998) é obrigatória.');
+      setError('A senha de segurança é obrigatória.');
       return;
     }
 
@@ -73,6 +74,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
 
     try {
       await createLivroAPI(newLivro.trim(), pin.trim());
+      setSessionPin(pin.trim());
       setSuccess(`Livro "${newLivro.trim()}" cadastrado com sucesso!`);
       setNewLivro('');
       onEntityCreated();
@@ -267,10 +269,10 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
           )}
 
           {/* PIN Input */}
-          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 space-y-2">
+          <div className="p-4 rounded bg-amber-950/20 border border-amber-500/40 space-y-2">
             <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
               <Lock className="w-3.5 h-3.5" />
-              <span>Senha de Segurança (1998)</span>
+              <span>Senha de Segurança</span>
             </div>
             <div className="relative max-w-xs">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -281,8 +283,8 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
                 required
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                placeholder="1998"
-                className="w-full pl-9 pr-4 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                placeholder="••••"
+                className="w-full pl-9 pr-4 py-1.5 bg-slate-950 border border-slate-700 rounded text-xs font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
               />
             </div>
           </div>
@@ -295,7 +297,7 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
             type="button"
             id="btn-close-manage-entities"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+            className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
           >
             Fechar
           </button>

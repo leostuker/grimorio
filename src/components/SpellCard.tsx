@@ -3,15 +3,8 @@ import {
   Clock,
   Compass,
   Hourglass,
-  Sparkles,
   Shield,
-  Flame,
-  Swords,
   Layers,
-  BookOpen,
-  Edit,
-  Trash2,
-  Eye,
   Crosshair,
 } from 'lucide-react';
 import { MagiaCompleta } from '../types';
@@ -26,15 +19,13 @@ import {
 interface SpellCardProps {
   magia: MagiaCompleta;
   onView: (magia: MagiaCompleta) => void;
-  onEdit: (magia: MagiaCompleta) => void;
-  onDelete: (magia: MagiaCompleta) => void;
+  onEdit?: (magia: MagiaCompleta) => void;
+  onDelete?: (magia: MagiaCompleta) => void;
 }
 
 export const SpellCard: React.FC<SpellCardProps> = ({
   magia,
   onView,
-  onEdit,
-  onDelete,
 }) => {
   const escolaColor = getEscolaColor(magia.escola);
   const danoFormula = formatDanoFormula(
@@ -46,63 +37,31 @@ export const SpellCard: React.FC<SpellCardProps> = ({
   return (
     <div
       id={`spell-card-${magia.id_magia}`}
-      className="group relative bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md p-5 shadow-lg transition-all duration-200 flex flex-col justify-between"
+      onClick={() => onView(magia)}
+      className="group relative bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md p-5 shadow-lg transition-all duration-200 flex flex-col justify-between cursor-pointer"
     >
       {/* Top Header */}
       <div>
-        <div className="flex items-start justify-between gap-3 mb-2.5">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
-                {formatCirculo(magia.circulo)}
-              </span>
-              <span
-                className={`text-xs font-semibold px-2.5 py-0.5 rounded border ${escolaColor.badge}`}
-              >
-                {magia.escola}
-              </span>
-            </div>
-
-            <h3
-              onClick={() => onView(magia)}
-              className="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors cursor-pointer truncate"
-              title={magia.nome_magia}
-            >
-              {magia.nome_magia}
-            </h3>
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-            <button
-              id={`btn-view-spell-${magia.id_magia}`}
-              onClick={() => onView(magia)}
-              className="p-1.5 rounded text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
-              title="Ver detalhes da magia"
-            >
-              <Eye className="w-4 h-4" />
-            </button>
-            <button
-              id={`btn-edit-spell-${magia.id_magia}`}
-              onClick={() => onEdit(magia)}
-              className="p-1.5 rounded text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-colors"
-              title="Editar magia (Exige PIN 1998)"
-            >
-              <Edit className="w-4 h-4" />
-            </button>
-            <button
-              id={`btn-delete-spell-${magia.id_magia}`}
-              onClick={() => onDelete(magia)}
-              className="p-1.5 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-              title="Apagar magia (Exige PIN 1998)"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="flex items-center gap-2 flex-wrap mb-2">
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 whitespace-nowrap">
+            {formatCirculo(magia.circulo)}
+          </span>
+          <span
+            className={`text-xs font-semibold px-2.5 py-0.5 rounded border whitespace-nowrap ${escolaColor.badge}`}
+          >
+            {magia.escola}
+          </span>
         </div>
 
+        <h3
+          className="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors truncate mb-2.5"
+          title={magia.nome_magia}
+        >
+          {magia.nome_magia}
+        </h3>
+
         {/* Quick Specs Grid */}
-        <div className="grid grid-cols-2 gap-2 my-3 py-2.5 px-3 bg-slate-950/60 rounded border border-slate-800/60 text-xs">
+        <div className="grid grid-cols-2 gap-2 my-2.5 py-2.5 px-3 bg-slate-950/60 rounded border border-slate-800/60 text-xs">
           <div className="flex items-center gap-1.5 text-slate-300">
             <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
             <span className="truncate" title={magia.tempo}>
@@ -140,7 +99,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         </div>
 
         {/* Badges de Regras (Concentração, Salvaguarda, Ataque, Dano) */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="flex flex-wrap gap-1.5 mb-2.5">
           {magia.concentracao && (
             <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-indigo-950/70 text-indigo-300 border border-indigo-700/50">
               Concentração
@@ -180,45 +139,36 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             ))}
         </div>
 
-        {/* Descrição Curta (Sanitizada de Markdown para preview) */}
-        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-3">
+        {/* Descrição com mais espaço */}
+        <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-3">
           {stripMarkdown(magia.descricao)}
         </p>
       </div>
 
-      {/* Footer: Conjuradores & Livro */}
-      <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2 text-xs">
-        {/* Classes de Conjuradores */}
-        <div className="flex items-center gap-1 overflow-hidden">
-          {magia.conjuradores && magia.conjuradores.length > 0 ? (
-            <div className="flex flex-wrap gap-1">
-              {magia.conjuradores.slice(0, 3).map((c) => (
-                <span
-                  key={c.id_conjurador}
-                  className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-medium"
-                >
-                  {c.classe}
-                </span>
-              ))}
-              {magia.conjuradores.length > 3 && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-medium">
-                  +{magia.conjuradores.length - 3}
-                </span>
-              )}
-            </div>
-          ) : (
-            <span className="text-[10px] text-slate-500 italic">Sem conjurador</span>
-          )}
-        </div>
-
-        {/* Livro */}
-        <span
-          className="text-[11px] text-slate-400 truncate max-w-[130px] flex items-center gap-1 shrink-0"
-          title={magia.nome_livro || 'Livro Padrão'}
-        >
-          <BookOpen className="w-3 h-3 text-slate-500 shrink-0" />
-          {magia.nome_livro || 'Livro Padrão'}
-        </span>
+      {/* Footer: Classes em linha única sem scrollbar com indicador +N */}
+      <div className="pt-2.5 border-t border-slate-800/80 flex items-center gap-1.5 overflow-hidden text-xs">
+        {magia.conjuradores && magia.conjuradores.length > 0 ? (
+          <>
+            {magia.conjuradores.slice(0, 3).map((c) => (
+              <span
+                key={c.id_conjurador}
+                className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-medium whitespace-nowrap"
+              >
+                {c.classe}
+              </span>
+            ))}
+            {magia.conjuradores.length > 3 && (
+              <span
+                className="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/80 font-medium whitespace-nowrap"
+                title={magia.conjuradores.slice(3).map((c) => c.classe).join(', ')}
+              >
+                +{magia.conjuradores.length - 3}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-[10px] text-slate-500 italic">Sem conjurador</span>
+        )}
       </div>
     </div>
   );

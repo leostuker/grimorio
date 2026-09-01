@@ -213,33 +213,50 @@ export default function App() {
         onOpenImportCSV={() => setIsCsvImportOpen(true)}
         onOpenManageEntities={() => setIsManageEntitiesOpen(true)}
         onOpenDocSchema={() => setIsDocSchemaOpen(true)}
-        onOpenDbModal={() => setIsDbModalOpen(true)}
         onExportCSV={handleExportCSV}
       />
 
-      {/* Database Connection Notice Banner (when not connected to real PostgreSQL) */}
-      {metadata && metadata.statusConexao?.modo !== 'postgres' && (
-        <div
-          id="banner-db-fallback-notice"
-          className="bg-amber-950/80 border-b border-amber-800/60 px-4 py-2 text-xs text-amber-200 flex flex-wrap items-center justify-between gap-3 shadow-inner"
-        >
-          <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>
-              <strong>Atenção:</strong> O app está em <em>Modo Fallback (Memória)</em> porque não conseguiu conectar ao PostgreSQL em{' '}
-              <code className="bg-slate-950/70 px-1.5 py-0.5 rounded font-mono text-amber-300">
-                {metadata.statusConexao.host}:{metadata.statusConexao.porta}
-              </code>.
+      {/* Database Connection Notice Banner */}
+      {metadata && metadata.statusConexao && (
+        metadata.statusConexao.modo !== 'postgres' ? (
+          <div
+            id="banner-db-fallback-notice"
+            className="bg-amber-950/70 border-b border-amber-800/50 px-4 py-2 text-xs text-amber-200 flex items-center justify-between gap-3 shadow-inner cursor-pointer hover:bg-amber-950/90 transition-colors"
+            onClick={() => setIsDbModalOpen(true)}
+          >
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>
+                <strong>Atenção:</strong> O app está operando em <em>Modo Fallback (Memória)</em>.
+              </span>
+            </div>
+            <button
+              id="btn-banner-view-error"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDbModalOpen(true);
+              }}
+              className="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-all shrink-0"
+            >
+              Ver Erro
+            </button>
+          </div>
+        ) : (
+          <div
+            id="banner-db-connected-notice"
+            className="bg-emerald-950/50 border-b border-emerald-800/40 px-4 py-1.5 text-xs text-emerald-200 flex items-center justify-between gap-3 cursor-pointer hover:bg-emerald-950/70 transition-colors"
+            onClick={() => setIsDbModalOpen(true)}
+          >
+            <div className="flex items-center gap-2">
+              <Database className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Túnel / Banco de dados conectado e operacional.</span>
+            </div>
+            <span className="text-[11px] text-emerald-400/80 hover:text-emerald-300 underline font-medium">
+              Ver Status
             </span>
           </div>
-          <button
-            id="btn-banner-diagnose-db"
-            onClick={() => setIsDbModalOpen(true)}
-            className="px-3 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shrink-0 shadow-sm"
-          >
-            Diagnosticar / Conectar DB
-          </button>
-        </div>
+        )
       )}
 
       {/* Main Container */}
@@ -592,7 +609,7 @@ export default function App() {
             ? `Apagar Magia "${pendingAction.target?.nome_magia}"`
             : 'Autorização Administrativa'
         }
-        actionDescription="Para apagar esta magia do banco de dados, digite a senha de segurança configurada (1998)."
+        actionDescription="Para apagar esta magia do banco de dados, digite a senha de segurança autorizada."
       />
 
       {/* Toasts */}

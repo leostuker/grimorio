@@ -13,7 +13,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { ResultadoImportacaoCSV } from '../types';
-import { importCSVAPI, getSessionPin } from '../services/api';
+import { importCSVAPI, getSessionPin, setSessionPin } from '../services/api';
 
 interface CsvImportModalProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [csvText, setCsvText] = useState('');
-  const [pin, setPin] = useState(getSessionPin() || '1998');
+  const [pin, setPin] = useState(getSessionPin());
   const [mode, setMode] = useState<'file' | 'text'>('file');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +73,7 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
       return;
     }
     if (!pin.trim()) {
-      setError('A senha de segurança (1998) é obrigatória.');
+      setError('A senha de segurança é obrigatória.');
       return;
     }
 
@@ -88,6 +88,7 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
         pin.trim()
       );
       setResult(res);
+      setSessionPin(pin.trim());
       if (res.importadas > 0) {
         onSuccess(res);
       }
@@ -323,10 +324,10 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
           )}
 
           {/* Trava de Segurança */}
-          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/40 space-y-3">
+          <div className="p-4 rounded bg-amber-950/20 border border-amber-500/40 space-y-3">
             <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
               <Lock className="w-4 h-4" />
-              <span>Trava de Segurança Obrigatória (PIN 1998)</span>
+              <span>Trava de Segurança Obrigatória</span>
             </div>
             <div className="relative max-w-xs">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -338,8 +339,8 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
                 required
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                placeholder="1998"
-                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                placeholder="••••"
+                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
               />
             </div>
           </div>
@@ -352,7 +353,7 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
             type="button"
             id="btn-cancel-csv"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+            className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
           >
             Fechar
           </button>
@@ -361,7 +362,7 @@ export const CsvImportModal: React.FC<CsvImportModalProps> = ({
             id="btn-execute-csv-import"
             onClick={handleSubmit}
             disabled={loading}
-            className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-md shadow-amber-500/20 transition-all disabled:opacity-50"
+            className="px-5 py-2 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-md shadow-amber-500/20 transition-all disabled:opacity-50"
           >
             <Upload className="w-4 h-4 stroke-[2.5]" />
             {loading ? 'Processando Importação...' : 'Importar Magias no Banco'}
