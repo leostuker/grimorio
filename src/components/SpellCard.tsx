@@ -22,7 +22,6 @@ import {
   formatDanoFormula,
   stripMarkdown,
 } from '../utils/magicHelpers';
-import { ClassPictogram } from './ClassPictogram';
 
 interface SpellCardProps {
   magia: MagiaCompleta;
@@ -47,18 +46,18 @@ export const SpellCard: React.FC<SpellCardProps> = ({
   return (
     <div
       id={`spell-card-${magia.id_magia}`}
-      className="group relative bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-lg transition-all duration-200 flex flex-col justify-between"
+      className="group relative bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md p-5 shadow-lg transition-all duration-200 flex flex-col justify-between"
     >
       {/* Top Header */}
       <div>
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
                 {formatCirculo(magia.circulo)}
               </span>
               <span
-                className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${escolaColor.badge}`}
+                className={`text-xs font-semibold px-2.5 py-0.5 rounded border ${escolaColor.badge}`}
               >
                 {magia.escola}
               </span>
@@ -78,7 +77,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             <button
               id={`btn-view-spell-${magia.id_magia}`}
               onClick={() => onView(magia)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
               title="Ver detalhes da magia"
             >
               <Eye className="w-4 h-4" />
@@ -86,7 +85,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             <button
               id={`btn-edit-spell-${magia.id_magia}`}
               onClick={() => onEdit(magia)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-colors"
               title="Editar magia (Exige PIN 1998)"
             >
               <Edit className="w-4 h-4" />
@@ -94,7 +93,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             <button
               id={`btn-delete-spell-${magia.id_magia}`}
               onClick={() => onDelete(magia)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
               title="Apagar magia (Exige PIN 1998)"
             >
               <Trash2 className="w-4 h-4" />
@@ -103,31 +102,31 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         </div>
 
         {/* Quick Specs Grid */}
-        <div className="grid grid-cols-2 gap-2.5 my-3.5 py-3 px-3.5 bg-slate-950/70 rounded-xl border border-slate-800/70 text-xs sm:text-sm">
+        <div className="grid grid-cols-2 gap-2 my-3 py-2.5 px-3 bg-slate-950/60 rounded border border-slate-800/60 text-xs">
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
-            <span className="truncate font-medium" title={magia.tempo}>
+            <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <span className="truncate" title={magia.tempo}>
               {magia.tempo}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Compass className="w-4 h-4 text-sky-400 shrink-0" />
-            <span className="truncate font-medium" title={magia.alcance}>
+            <Compass className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+            <span className="truncate" title={magia.alcance}>
               {magia.alcance}
               {magia.forma ? ` (${magia.forma})` : ''}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Hourglass className="w-4 h-4 text-violet-400 shrink-0" />
-            <span className="truncate font-medium" title={magia.duracao}>
+            <Hourglass className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+            <span className="truncate" title={magia.duracao}>
               {magia.duracao}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-slate-300">
-            <Layers className="w-4 h-4 text-pink-400 shrink-0" />
+            <Layers className="w-3.5 h-3.5 text-pink-400 shrink-0" />
             <span className="font-mono tracking-wider font-semibold">
               {[
                 magia.componente_verbal ? 'V' : null,
@@ -143,27 +142,27 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         {/* Badges de Regras (Concentração, Salvaguarda, Ataque, Dano) */}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {magia.concentracao && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-950/80 text-indigo-300 border border-indigo-700/60 shadow-xs">
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-indigo-950/70 text-indigo-300 border border-indigo-700/50">
               Concentração
             </span>
           )}
 
           {magia.salvaguarda && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-cyan-950/80 text-cyan-300 border border-cyan-700/60 shadow-xs flex items-center gap-1">
-              <Shield className="w-3.5 h-3.5" />
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-cyan-950/70 text-cyan-300 border border-cyan-700/50 flex items-center gap-1">
+              <Shield className="w-3 h-3" />
               Salv: {magia.atributo_salvaguarda || 'Sim'}
             </span>
           )}
 
           {magia.ataque && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-rose-950/80 text-rose-300 border border-rose-700/60 shadow-xs flex items-center gap-1">
-              <Crosshair className="w-3.5 h-3.5" />
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-rose-950/70 text-rose-300 border border-rose-700/50 flex items-center gap-1">
+              <Crosshair className="w-3 h-3" />
               Ataque
             </span>
           )}
 
           {danoFormula && (
-            <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-violet-950/90 text-violet-300 border border-violet-700/70 font-mono shadow-xs">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-violet-950/80 text-violet-300 border border-violet-700/60 font-mono">
               {danoFormula}
             </span>
           )}
@@ -172,7 +171,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
             magia.tipos_dano.map((td) => (
               <span
                 key={td}
-                className={`text-xs font-semibold px-2.5 py-1 rounded-lg border shadow-xs ${getTipoDanoBadgeClass(
+                className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${getTipoDanoBadgeClass(
                   td
                 )}`}
               >
@@ -182,7 +181,7 @@ export const SpellCard: React.FC<SpellCardProps> = ({
         </div>
 
         {/* Descrição Curta (Sanitizada de Markdown para preview) */}
-        <p className="text-sm text-slate-300 line-clamp-2 leading-relaxed mb-3.5">
+        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-3">
           {stripMarkdown(magia.descricao)}
         </p>
       </div>
@@ -190,35 +189,34 @@ export const SpellCard: React.FC<SpellCardProps> = ({
       {/* Footer: Conjuradores & Livro */}
       <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2 text-xs">
         {/* Classes de Conjuradores */}
-        <div className="flex items-center gap-1.5 overflow-hidden">
+        <div className="flex items-center gap-1 overflow-hidden">
           {magia.conjuradores && magia.conjuradores.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5 items-center">
+            <div className="flex flex-wrap gap-1">
               {magia.conjuradores.slice(0, 3).map((c) => (
                 <span
                   key={c.id_conjurador}
-                  className="text-xs pl-1.5 pr-2 py-1 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 font-medium flex items-center gap-1.5"
+                  className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-medium"
                 >
-                  <ClassPictogram classe={c.classe} size="xs" />
-                  <span>{c.classe}</span>
+                  {c.classe}
                 </span>
               ))}
               {magia.conjuradores.length > 3 && (
-                <span className="text-xs px-2 py-1 rounded-lg bg-slate-800 text-slate-400 font-medium">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-medium">
                   +{magia.conjuradores.length - 3}
                 </span>
               )}
             </div>
           ) : (
-            <span className="text-xs text-slate-500 italic">Sem conjurador</span>
+            <span className="text-[10px] text-slate-500 italic">Sem conjurador</span>
           )}
         </div>
 
         {/* Livro */}
         <span
-          className="text-xs text-slate-400 truncate max-w-[140px] flex items-center gap-1.5 shrink-0"
+          className="text-[11px] text-slate-400 truncate max-w-[130px] flex items-center gap-1 shrink-0"
           title={magia.nome_livro || 'Livro Padrão'}
         >
-          <BookOpen className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+          <BookOpen className="w-3 h-3 text-slate-500 shrink-0" />
           {magia.nome_livro || 'Livro Padrão'}
         </span>
       </div>

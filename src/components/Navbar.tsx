@@ -47,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Logo & Status */}
           <div className="flex items-center gap-4 shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 font-bold">
+              <div className="w-10 h-10 rounded-md bg-gradient-to-br from-indigo-600 to-violet-700 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 font-bold">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -65,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 id="badge-db-connection"
                 onClick={onOpenDbModal}
                 title="Clique para abrir o Diagnóstico e Configurações de Conexão com o PostgreSQL"
-                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border font-medium transition-all ${
+                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded text-xs border font-medium transition-all ${
                   isPostgres
                     ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-500'
                     : 'bg-indigo-950/70 border-indigo-700/60 text-indigo-300 hover:bg-indigo-900/70 hover:border-indigo-500 animate-pulse'
@@ -91,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Buscar magia por nome ou descrição..."
-                className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-db-diagnostic"
               onClick={onOpenDbModal}
-              className={`p-2 sm:px-3 sm:py-2 rounded-xl border text-xs sm:text-sm font-semibold transition-colors flex items-center gap-2 ${
+              className={`p-2 rounded border text-xs font-medium transition-colors flex items-center gap-1.5 ${
                 isPostgres
                   ? 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-emerald-400'
                   : 'bg-indigo-950/60 hover:bg-indigo-900/70 border-indigo-800/70 text-indigo-300'
@@ -116,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-manage-entities"
               onClick={onOpenManageEntities}
-              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors"
+              className="p-2 sm:px-3 sm:py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs font-medium flex items-center gap-1.5 transition-colors"
               title="Gerenciar Classes e Livros"
             >
               <Users className="w-4 h-4 text-slate-400" />
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-import-csv"
               onClick={onOpenImportCSV}
-              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors"
+              className="p-2 sm:px-3 sm:py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs font-medium flex items-center gap-1.5 transition-colors"
               title="Importar Arquivo CSV"
             >
               <Upload className="w-4 h-4 text-indigo-400" />
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-export-csv"
               onClick={onExportCSV}
-              className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs font-semibold transition-colors"
+              className="p-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs font-medium transition-colors"
               title="Exportar Magias em CSV"
             >
               <Download className="w-4 h-4 text-slate-400" />
@@ -145,7 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-new-spell"
               onClick={onOpenNewSpell}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md shadow-indigo-600/30 transition-all"
+              className="px-3.5 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition-all"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Nova Magia</span>
@@ -154,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="btn-nav-doc-schema"
               onClick={onOpenDocSchema}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-indigo-400 transition-colors"
+              className="p-2 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-indigo-400 transition-colors"
               title="Documentação do Schema, CSV e Docker"
             >
               <HelpCircle className="w-5 h-5" />

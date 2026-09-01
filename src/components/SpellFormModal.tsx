@@ -21,7 +21,6 @@ import {
   Quote,
 } from 'lucide-react';
 import { MarkdownRenderer } from './MarkdownRenderer';
-import { ClassPictogram } from './ClassPictogram';
 import {
   MagiaCompleta,
   MagiaPayload,
@@ -219,12 +218,12 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
     >
       <div
         id="spell-form-modal"
-        className="w-full max-w-3xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden my-6 text-slate-100 relative animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]"
+        className="w-full max-w-3xl bg-slate-900 border border-slate-700 rounded-md shadow-2xl overflow-hidden my-6 text-slate-100 relative animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]"
       >
         {/* Header */}
         <div className="p-5 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -240,7 +239,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
           <button
             id="btn-close-form-modal"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -252,7 +251,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
           {error && (
             <div
               id="form-error-alert"
-              className="p-4 rounded-xl bg-rose-950/70 border border-rose-800 text-rose-200 text-xs flex items-center gap-2"
+              className="p-4 rounded bg-rose-950/70 border border-rose-800 text-rose-200 text-xs flex items-center gap-2"
             >
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{error}</span>
@@ -278,7 +277,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   value={formData.nome_magia}
                   onChange={(e) => setFormData({ ...formData, nome_magia: e.target.value })}
                   placeholder="Ex: Bola de Fogo"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
@@ -290,7 +289,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   id="select-circulo"
                   value={formData.circulo}
                   onChange={(e) => setFormData({ ...formData, circulo: parseInt(e.target.value, 10) })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   <option value={0}>0 - Truque</option>
                   <option value={1}>1º Círculo</option>
@@ -315,7 +314,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   id="select-escola"
                   value={formData.escola}
                   onChange={(e) => setFormData({ ...formData, escola: e.target.value as Escola })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   {ESCOLAS.map((escola) => (
                     <option key={escola} value={escola}>
@@ -333,7 +332,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   id="select-livro"
                   value={formData.id_livro}
                   onChange={(e) => setFormData({ ...formData, id_livro: parseInt(e.target.value, 10) })}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   {(metadata?.livros || []).map((livro) => (
                     <option key={livro.id_livro} value={livro.id_livro}>
@@ -363,7 +362,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   value={formData.tempo}
                   onChange={(e) => setFormData({ ...formData, tempo: e.target.value })}
                   placeholder="Ex: 1 ação, 1 ação bônus, 1 reação"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
@@ -378,7 +377,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   value={formData.alcance}
                   onChange={(e) => setFormData({ ...formData, alcance: e.target.value })}
                   placeholder="Ex: Pessoal, Toque, 18 metros"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
@@ -393,7 +392,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   value={formData.duracao}
                   onChange={(e) => setFormData({ ...formData, duracao: e.target.value })}
                   placeholder="Ex: Instantânea, 1 minuto, Até 1 hora"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -412,7 +411,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                       forma: e.target.value ? (e.target.value as Forma) : null,
                     })
                   }
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   <option value="">Nenhuma (Alvo individual / Toque)</option>
                   {FORMAS.map((forma) => (
@@ -439,7 +438,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                     })
                   }
                   placeholder="Ex: 6 (raio), 18 (linha), 4.5 (cone)"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -487,7 +486,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             </div>
 
             {formData.componente_material && (
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+              <div className="p-4 rounded bg-slate-950 border border-slate-800 space-y-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Descrição do Componente Material
@@ -499,7 +498,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                     value={formData.descricao_material || ''}
                     onChange={(e) => setFormData({ ...formData, descricao_material: e.target.value })}
                     placeholder="Ex: Um rubi no valor de pelo menos 1.000 PO"
-                    className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                    className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                   />
                 </div>
 
@@ -520,7 +519,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                         })
                       }
                       placeholder="Ex: 50, 100, 1000"
-                      className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                      className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                     />
                   </div>
 
@@ -552,7 +551,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded bg-slate-950 border border-slate-800">
                 <input
                   id="checkbox-concentracao"
                   type="checkbox"
@@ -563,7 +562,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                 <span className="text-xs font-semibold">Exige Concentração</span>
               </label>
 
-              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded bg-slate-950 border border-slate-800">
                 <input
                   id="checkbox-ataque"
                   type="checkbox"
@@ -574,7 +573,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                 <span className="text-xs font-semibold">Jogada de Ataque</span>
               </label>
 
-              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <label className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer p-3 rounded bg-slate-950 border border-slate-800">
                 <input
                   id="checkbox-salvaguarda"
                   type="checkbox"
@@ -606,7 +605,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                       atributo_salvaguarda: e.target.value ? (e.target.value as Atributo) : null,
                     })
                   }
-                  className="w-full sm:w-1/2 px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full sm:w-1/2 px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   <option value="">Selecione o atributo</option>
                   {ATRIBUTOS.map((attr) => (
@@ -639,7 +638,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                       dado_dano: e.target.value ? (e.target.value as Dado) : null,
                     })
                   }
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 >
                   <option value="">Nenhum dado</option>
                   {DADOS.map((d) => (
@@ -667,7 +666,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                     })
                   }
                   placeholder="Ex: 8 (para 8d6)"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
 
@@ -686,12 +685,12 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                     })
                   }
                   placeholder="Ex: 5"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-700 rounded text-sm text-slate-100 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
             </div>
 
-            {/* Tipos de Dano N:M */}
+            {/* Tipos de Dano N:M - Organizado em 3 Colunas */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-xs font-semibold text-slate-300">
@@ -712,7 +711,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   {formData.tipos_dano.length === TIPOS_DANO.length ? 'Desmarcar Todos' : 'Selecionar Todos (Qualquer)'}
                 </button>
               </div>
-              <div className="flex flex-wrap gap-1.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <div className="grid grid-cols-3 gap-1.5 p-3 rounded bg-slate-950 border border-slate-800">
                 {TIPOS_DANO.map((td) => {
                   const selected = formData.tipos_dano.includes(td);
                   return (
@@ -720,10 +719,10 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                       key={td}
                       type="button"
                       onClick={() => toggleTipoDano(td)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                      className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                         selected
-                          ? 'bg-indigo-600 text-white border-indigo-400 font-bold shadow-sm'
-                          : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
+                          ? 'bg-indigo-600 text-white border-indigo-400 font-bold shadow-xs'
+                          : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                       }`}
                     >
                       {td}
@@ -734,58 +733,31 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             </div>
           </div>
 
-          {/* 6. Conjuradores (Tabela N:M - Organizados em 3 Colunas com Pictogramas) */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 flex-wrap gap-2">
-              <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-emerald-400" />
-                <span>6. Classes de Conjuradores (Tabela N:M `magias_conjuradores`)</span>
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-normal text-slate-400">
-                  {formData.conjuradores_ids.length} selecionada(s)
-                </span>
-                <button
-                  type="button"
-                  id="btn-form-toggle-all-casters"
-                  onClick={() => {
-                    const allIds = (metadata?.conjuradores || []).map((c) => c.id_conjurador);
-                    if (formData.conjuradores_ids.length === allIds.length) {
-                      setFormData({ ...formData, conjuradores_ids: [] });
-                    } else {
-                      setFormData({ ...formData, conjuradores_ids: [...allIds] });
-                    }
-                  }}
-                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800/60"
-                >
-                  {formData.conjuradores_ids.length === (metadata?.conjuradores || []).length
-                    ? 'Desmarcar Todas'
-                    : 'Marcar Todas'}
-                </button>
-              </div>
-            </div>
+          {/* 6. Conjuradores (Tabela N:M - Organizado em 3 Colunas) */}
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider border-b border-slate-800 pb-1.5 flex items-center justify-between">
+              <span>6. Classes de Conjuradores (Tabela N:M `magias_conjuradores`)</span>
+              <span className="text-[11px] font-normal text-slate-400">
+                {formData.conjuradores_ids.length} selecionada(s)
+              </span>
+            </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 max-h-56 overflow-y-auto">
+            <div className="grid grid-cols-3 gap-1.5 p-3 rounded bg-slate-950 border border-slate-800 max-h-56 overflow-y-auto pr-1">
               {(metadata?.conjuradores || []).map((c) => {
                 const selected = formData.conjuradores_ids.includes(c.id_conjurador);
                 return (
-                  <label
+                  <button
                     key={c.id_conjurador}
-                    className={`flex items-center gap-2.5 p-2 rounded-xl border text-xs cursor-pointer select-none transition-all ${
+                    type="button"
+                    onClick={() => toggleConjurador(c.id_conjurador)}
+                    className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                       selected
-                        ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 font-semibold ring-1 ring-emerald-500/30 shadow-sm'
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-850'
+                        ? 'bg-emerald-950 text-emerald-200 border-emerald-600 font-bold shadow-xs'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      onChange={() => toggleConjurador(c.id_conjurador)}
-                      className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-400 shrink-0"
-                    />
-                    <ClassPictogram classe={c.classe} size="xs" />
-                    <span className="truncate">{c.classe}</span>
-                  </label>
+                    {c.classe}
+                  </button>
                 );
               })}
             </div>
@@ -802,7 +774,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
               </h3>
 
               {/* Tabs Escrever / Visualizar */}
-              <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800">
+              <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded border border-slate-800">
                 <button
                   type="button"
                   id="btn-tab-write-markdown"
@@ -835,7 +807,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             {descriptionTab === 'write' ? (
               <div className="space-y-2">
                 {/* Markdown Formatting Toolbar */}
-                <div className="flex items-center gap-1 p-1 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 flex-wrap">
+                <div className="flex items-center gap-1 p-1 bg-slate-950 border border-slate-800 rounded text-xs text-slate-400 flex-wrap">
                   <button
                     type="button"
                     onClick={() => insertMarkdownSnippet('**', '**')}
@@ -896,18 +868,18 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                   value={formData.descricao}
                   onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                   placeholder="Descreva detalhadamente os efeitos, alvos, dano em níveis superiores, etc. Use Markdown para formatar."
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded text-sm font-mono text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
                 />
               </div>
             ) : (
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-700 min-h-[160px] max-h-72 overflow-y-auto">
+              <div className="p-4 rounded bg-slate-950 border border-slate-700 min-h-[160px] max-h-72 overflow-y-auto">
                 <MarkdownRenderer content={formData.descricao} />
               </div>
             )}
           </div>
 
           {/* 8. Trava de Segurança */}
-          <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/40 space-y-3">
+          <div className="p-4 rounded bg-indigo-950/30 border border-indigo-500/40 space-y-3">
             <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
               <Lock className="w-4 h-4" />
               <span>Trava de Segurança Obrigatória (PIN 1998)</span>
@@ -926,7 +898,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 placeholder="1998"
-                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded text-sm font-mono tracking-widest text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
             </div>
           </div>
@@ -939,7 +911,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             type="button"
             id="btn-cancel-form"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+            className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
           >
             Cancelar
           </button>
@@ -948,7 +920,7 @@ export const SpellFormModal: React.FC<SpellFormModalProps> = ({
             id="btn-submit-form"
             onClick={handleSubmit}
             disabled={loading}
-            className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-indigo-600/30 transition-all disabled:opacity-50"
+            className="px-5 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-indigo-600/30 transition-all disabled:opacity-50"
           >
             <Save className="w-4 h-4 stroke-[2.5]" />
             {loading ? 'Salvando no Banco...' : isEditing ? 'Salvar Alterações' : 'Cadastrar Magia'}

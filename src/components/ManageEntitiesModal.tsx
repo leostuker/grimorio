@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { MetadataBanco } from '../types';
 import { createConjuradorAPI, createLivroAPI, getSessionPin } from '../services/api';
-import { ClassPictogram } from './ClassPictogram';
 
 interface ManageEntitiesModalProps {
   isOpen: boolean;
@@ -205,19 +204,16 @@ export const ManageEntitiesModal: React.FC<ManageEntitiesModalProps> = ({
               {/* Lista Existente */}
               <div>
                 <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Classes Cadastradas no Banco ({metadata?.conjuradores.length || 0}):
+                  Classes Cadastradas no Banco:
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
+                <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
                   {(metadata?.conjuradores || []).map((c) => (
                     <div
                       key={c.id_conjurador}
-                      className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs gap-2"
+                      className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs"
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <ClassPictogram classe={c.classe} size="xs" />
-                        <span className="font-semibold text-slate-200 truncate">{c.classe}</span>
-                      </div>
-                      <span className="text-[10px] text-slate-500 font-mono shrink-0">#{c.id_conjurador}</span>
+                      <span className="font-semibold text-slate-200">{c.classe}</span>
+                      <span className="text-[10px] text-slate-500 font-mono">#{c.id_conjurador}</span>
                     </div>
                   ))}
                 </div>

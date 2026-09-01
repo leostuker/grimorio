@@ -235,7 +235,7 @@ export default function App() {
           <button
             id="btn-banner-diagnose-db"
             onClick={() => setIsDbModalOpen(true)}
-            className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shrink-0 shadow-sm"
+            className="px-3 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shrink-0 shadow-sm"
           >
             Diagnosticar / Conectar DB
           </button>
@@ -267,7 +267,7 @@ export default function App() {
               <button
                 id="btn-open-filter-mobile"
                 onClick={() => setIsMobileFilterOpen(true)}
-                className="md:hidden px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-indigo-400 flex items-center gap-1.5 shadow-sm"
+                className="md:hidden px-3 py-2 rounded bg-slate-900 border border-slate-800 text-xs font-semibold text-indigo-400 flex items-center gap-1.5 shadow-sm"
               >
                 <Filter className="w-4 h-4" />
                 Filtros ({magias.length})
@@ -276,7 +276,7 @@ export default function App() {
               <div>
                 <h1 className="text-xl font-black text-slate-100 tracking-tight flex items-center gap-2">
                   <span>Grimório de Magias</span>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-indigo-400">
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-indigo-400">
                     {magias.length} {magias.length === 1 ? 'magia' : 'magias'}
                   </span>
                 </h1>
@@ -290,8 +290,8 @@ export default function App() {
             <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
               
               {/* Sort selector */}
-              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-300">
-                <ArrowUpDown className="w-4 h-4 text-slate-400" />
+              <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded px-3 py-1.5 text-xs text-slate-300">
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
                 <select
                   id="select-sort-magias"
                   value={`${filtros.sort_by}-${filtros.sort_order}`}
@@ -299,7 +299,7 @@ export default function App() {
                     const [sort_by, sort_order] = e.target.value.split('-') as [any, any];
                     setFiltros({ ...filtros, sort_by, sort_order });
                   }}
-                  className="bg-transparent text-slate-200 focus:outline-none cursor-pointer font-semibold text-xs sm:text-sm"
+                  className="bg-transparent text-slate-200 focus:outline-none cursor-pointer font-medium"
                 >
                   <option value="nome_magia-asc" className="bg-slate-900">Nome (A - Z)</option>
                   <option value="nome_magia-desc" className="bg-slate-900">Nome (Z - A)</option>
@@ -311,11 +311,11 @@ export default function App() {
               </div>
 
               {/* View Switcher */}
-              <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-1">
+              <div className="flex bg-slate-900 border border-slate-800 rounded p-1">
                 <button
                   id="btn-view-grid"
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-colors ${
+                  className={`p-1.5 rounded transition-colors ${
                     viewMode === 'grid'
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
@@ -327,7 +327,7 @@ export default function App() {
                 <button
                   id="btn-view-table"
                   onClick={() => setViewMode('table')}
-                  className={`p-2 rounded-lg transition-colors ${
+                  className={`p-1.5 rounded transition-colors ${
                     viewMode === 'table'
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
@@ -345,7 +345,7 @@ export default function App() {
                   loadMagias();
                   loadMetadata();
                 }}
-                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+                className="p-2 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
                 title="Recarregar do banco"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
@@ -365,7 +365,7 @@ export default function App() {
           ) : magias.length === 0 ? (
             <div
               id="empty-state-magias"
-              className="py-16 px-6 text-center rounded-2xl bg-slate-900/40 border border-dashed border-slate-800 max-w-lg mx-auto"
+              className="py-16 px-6 text-center rounded-md bg-slate-900/40 border border-dashed border-slate-800 max-w-lg mx-auto"
             >
               <BookOpen className="w-12 h-12 text-slate-600 mx-auto mb-3" />
               <h3 className="text-base font-bold text-slate-200 mb-1">Nenhuma magia encontrada</h3>
@@ -376,14 +376,14 @@ export default function App() {
                 <button
                   id="btn-empty-clear-filters"
                   onClick={resetAllFilters}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
+                  className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
                 >
                   Limpar Filtros
                 </button>
                 <button
                   id="btn-empty-new-spell"
                   onClick={handleOpenNewSpell}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition-all"
+                  className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition-all"
                 >
                   <Plus className="w-4 h-4 stroke-[2.5]" /> Cadastrar Nova Magia
                 </button>
@@ -408,19 +408,19 @@ export default function App() {
             /* Table View */
             <div
               id="table-spells-container"
-              className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/80 shadow-lg"
+              className="overflow-x-auto rounded-md border border-slate-800 bg-slate-900/80 shadow-lg"
             >
-              <table className="w-full text-left text-xs sm:text-sm border-collapse">
+              <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950/90 text-slate-300 font-bold uppercase tracking-wider text-xs">
-                    <th className="py-4 px-4">Nome & Círculo</th>
-                    <th className="py-4 px-4">Escola</th>
-                    <th className="py-4 px-4">Tempo</th>
-                    <th className="py-4 px-4">Alcance</th>
-                    <th className="py-4 px-4">Duração</th>
-                    <th className="py-4 px-4">Comp.</th>
-                    <th className="py-4 px-4">Conjuradores</th>
-                    <th className="py-4 px-4 text-right">Ações</th>
+                  <tr className="border-b border-slate-800 bg-slate-950/80 text-slate-400 font-bold uppercase tracking-wider">
+                    <th className="py-3.5 px-4">Nome & Círculo</th>
+                    <th className="py-3.5 px-4">Escola</th>
+                    <th className="py-3.5 px-4">Tempo</th>
+                    <th className="py-3.5 px-4">Alcance</th>
+                    <th className="py-3.5 px-4">Duração</th>
+                    <th className="py-3.5 px-4">Comp.</th>
+                    <th className="py-3.5 px-4">Conjuradores</th>
+                    <th className="py-3.5 px-4 text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60">
@@ -429,35 +429,35 @@ export default function App() {
                     return (
                       <tr
                         key={m.id_magia}
-                        className="hover:bg-slate-850/90 transition-colors group cursor-pointer"
+                        className="hover:bg-slate-850/80 transition-colors group cursor-pointer"
                         onClick={() => setSelectedSpellForView(m)}
                       >
-                        <td className="py-3.5 px-4">
-                          <div className="font-bold text-sm sm:text-base text-slate-100 group-hover:text-indigo-300 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">
                             {m.nome_magia}
                           </div>
-                          <span className="text-xs text-indigo-400 font-semibold">
+                          <span className="text-[11px] text-indigo-400 font-semibold">
                             {formatCirculo(m.circulo)}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-3 px-4">
                           <span
-                            className={`px-2.5 py-1 rounded-full text-xs font-semibold border shadow-xs ${escolaColors.badge}`}
+                            className={`px-2 py-0.5 rounded text-[11px] font-semibold border ${escolaColors.badge}`}
                           >
                             {m.escola}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 text-slate-200 font-medium">{m.tempo}</td>
-                        <td className="py-3.5 px-4 text-slate-200 font-medium">{m.alcance}</td>
-                        <td className="py-3.5 px-4 text-slate-200 font-medium">
+                        <td className="py-3 px-4 text-slate-300">{m.tempo}</td>
+                        <td className="py-3 px-4 text-slate-300">{m.alcance}</td>
+                        <td className="py-3 px-4 text-slate-300">
                           {m.duracao}
                           {m.concentracao && (
-                            <span className="ml-1 text-xs text-indigo-400 font-semibold block">
+                            <span className="ml-1 text-[10px] text-indigo-400 font-semibold block">
                               (Concentração)
                             </span>
                           )}
                         </td>
-                        <td className="py-3.5 px-4 font-mono font-bold text-slate-200">
+                        <td className="py-3 px-4 font-mono font-semibold text-slate-300">
                           {[
                             m.componente_verbal ? 'V' : null,
                             m.componente_somatico ? 'S' : null,
@@ -466,37 +466,37 @@ export default function App() {
                             .filter(Boolean)
                             .join(', ')}
                         </td>
-                        <td className="py-3.5 px-4">
-                          <div className="flex flex-wrap gap-1.5 max-w-[220px]">
+                        <td className="py-3 px-4">
+                          <div className="flex flex-wrap gap-1 max-w-[200px]">
                             {(m.conjuradores || []).slice(0, 2).map((c) => (
                               <span
                                 key={c.id_conjurador}
-                                className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 border border-slate-700 font-medium"
+                                className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-medium"
                               >
                                 {c.classe}
                               </span>
                             ))}
                             {(m.conjuradores || []).length > 2 && (
-                              <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-medium">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-medium">
                                 +{(m.conjuradores || []).length - 2}
                               </span>
                             )}
                           </div>
                         </td>
                         <td
-                          className="py-3.5 px-4 text-right space-x-1.5"
+                          className="py-3 px-4 text-right space-x-1"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <button
                             onClick={() => handleOpenEditSpell(m)}
-                            className="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:text-sky-400 hover:bg-slate-800 border border-slate-800 transition-colors"
+                            className="p-1.5 rounded text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-colors"
                             title="Editar magia"
                           >
                             Editar
                           </button>
                           <button
                             onClick={() => handleDeleteSpell(m)}
-                            className="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:text-rose-400 hover:bg-slate-800 border border-slate-800 transition-colors"
+                            className="p-1.5 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
                             title="Apagar magia"
                           >
                             Apagar

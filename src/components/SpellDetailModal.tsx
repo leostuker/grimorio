@@ -27,7 +27,6 @@ import {
   formatAtributoNome,
 } from '../utils/magicHelpers';
 import { MarkdownRenderer } from './MarkdownRenderer';
-import { ClassPictogram } from './ClassPictogram';
 
 interface SpellDetailModalProps {
   magia: MagiaCompleta | null;
@@ -65,21 +64,21 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
     >
       <div
         id="spell-detail-modal"
-        className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden my-8 text-slate-100 relative animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-md shadow-2xl overflow-hidden my-8 text-slate-100 relative animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Header Ribbon */}
         <div className={`p-6 border-b border-slate-800 ${escolaColor.bg}`}>
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 flex-wrap mb-2">
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-600 text-white shadow-sm">
+                <span className="text-xs font-bold px-3 py-1 rounded bg-indigo-600 text-white shadow-sm">
                   {formatCirculo(magia.circulo)}
                 </span>
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${escolaColor.badge}`}>
+                <span className={`text-xs font-semibold px-3 py-1 rounded border ${escolaColor.badge}`}>
                   {magia.escola}
                 </span>
                 {magia.concentracao && (
-                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-600/50">
+                  <span className="text-xs font-semibold px-3 py-1 rounded bg-indigo-950 text-indigo-300 border border-indigo-600/50">
                     Concentração
                   </span>
                 )}
@@ -93,7 +92,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             <button
               id="btn-close-detail-modal"
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
+              className="p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -105,32 +104,32 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
           
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-indigo-400" /> Tempo
+            <div className="p-3 rounded bg-slate-950 border border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-indigo-400" /> Tempo
               </span>
-              <span className="text-sm sm:text-base font-bold text-slate-100">{magia.tempo}</span>
+              <span className="text-sm font-bold text-slate-200">{magia.tempo}</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
-                <Compass className="w-4 h-4 text-sky-400" /> Alcance
+            <div className="p-3 rounded bg-slate-950 border border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
+                <Compass className="w-3.5 h-3.5 text-sky-400" /> Alcance
               </span>
-              <span className="text-sm sm:text-base font-bold text-slate-100">{magia.alcance}</span>
+              <span className="text-sm font-bold text-slate-200">{magia.alcance}</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
-                <Hourglass className="w-4 h-4 text-violet-400" /> Duração
+            <div className="p-3 rounded bg-slate-950 border border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
+                <Hourglass className="w-3.5 h-3.5 text-violet-400" /> Duração
               </span>
-              <span className="text-sm sm:text-base font-bold text-slate-100">{magia.duracao}</span>
+              <span className="text-sm font-bold text-slate-200">{magia.duracao}</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-pink-400" /> Componentes
+            <div className="p-3 rounded bg-slate-950 border border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1 flex items-center gap-1">
+                <Layers className="w-3.5 h-3.5 text-pink-400" /> Componentes
               </span>
-              <span className="text-sm sm:text-base font-bold text-slate-100 font-mono">
+              <span className="text-sm font-bold text-slate-200 font-mono">
                 {[
                   magia.componente_verbal ? 'V' : null,
                   magia.componente_somatico ? 'S' : null,
@@ -144,20 +143,20 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
 
           {/* Material & Area Details */}
           {(magia.componente_material || magia.forma || magia.tamanho) && (
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5 text-sm">
+            <div className="p-4 rounded bg-slate-950/70 border border-slate-800/80 space-y-2 text-xs">
               {magia.componente_material && (
-                <div className="flex items-start gap-2.5 text-slate-300">
-                  <Coins className="w-4 h-4 text-indigo-400 shrink-0 mt-1" />
+                <div className="flex items-start gap-2 text-slate-300">
+                  <Coins className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold text-slate-200">Material:</span>{' '}
+                    <span className="font-semibold text-slate-200">Material:</span>{' '}
                     {magia.descricao_material || 'Componente material genérico (bolsa de componentes/foco)'}
                     {magia.valor_material && (
-                      <span className="ml-2 px-2.5 py-0.5 rounded-md bg-indigo-950/90 text-indigo-300 border border-indigo-700/60 font-semibold text-xs">
+                      <span className="ml-2 px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-700/60 font-semibold">
                         Custo: {magia.valor_material} PO
                       </span>
                     )}
                     {magia.consumo_material && (
-                      <span className="ml-2 px-2.5 py-0.5 rounded-md bg-rose-950/90 text-rose-300 border border-rose-700/60 font-semibold text-xs">
+                      <span className="ml-2 px-2 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-700/60 font-semibold">
                         Consumido no lançamento
                       </span>
                     )}
@@ -166,10 +165,10 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
               )}
 
               {(magia.forma || magia.tamanho) && (
-                <div className="flex items-center gap-2.5 text-slate-300 pt-1">
+                <div className="flex items-center gap-2 text-slate-300 pt-1">
                   <Compass className="w-4 h-4 text-sky-400 shrink-0" />
                   <span>
-                    <span className="font-bold text-slate-200">Área de Efeito:</span>{' '}
+                    <span className="font-semibold text-slate-200">Área de Efeito:</span>{' '}
                     {magia.forma || 'Área'} {magia.tamanho ? `(${magia.tamanho} metros)` : ''}
                   </span>
                 </div>
@@ -178,10 +177,10 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
           )}
 
           {/* Combat, Saves, Damage */}
-          <div className="flex flex-wrap gap-2.5 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
             {magia.salvaguarda && (
-              <div className="px-3.5 py-2 rounded-xl bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 text-xs sm:text-sm font-medium flex items-center gap-2">
-                <Shield className="w-4 h-4 text-cyan-400 shrink-0" />
+              <div className="px-3 py-1.5 rounded bg-cyan-950/70 border border-cyan-700/50 text-cyan-300 text-xs flex items-center gap-2">
+                <Shield className="w-4 h-4 text-cyan-400" />
                 <span>
                   <strong>Salvaguarda:</strong>{' '}
                   {magia.atributo_salvaguarda ? formatAtributoNome(magia.atributo_salvaguarda) : 'Exigida'}
@@ -190,8 +189,8 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
 
             {magia.ataque && (
-              <div className="px-3.5 py-2 rounded-xl bg-rose-950/80 border border-rose-700/60 text-rose-300 text-xs sm:text-sm font-medium flex items-center gap-2">
-                <Crosshair className="w-4 h-4 text-rose-400 shrink-0" />
+              <div className="px-3 py-1.5 rounded bg-rose-950/70 border border-rose-700/50 text-rose-300 text-xs flex items-center gap-2">
+                <Crosshair className="w-4 h-4 text-rose-400" />
                 <span>
                   <strong>Ataque Mágico:</strong> Requer jogada de ataque
                 </span>
@@ -199,8 +198,8 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
 
             {danoFormula && (
-              <div className="px-3.5 py-2 rounded-xl bg-violet-950/90 border border-violet-700/70 text-violet-300 text-xs sm:text-sm flex items-center gap-2 font-mono font-bold">
-                <Flame className="w-4 h-4 text-violet-400 shrink-0" />
+              <div className="px-3 py-1.5 rounded bg-violet-950/80 border border-violet-700/60 text-violet-300 text-xs flex items-center gap-2 font-mono">
+                <Flame className="w-4 h-4 text-violet-400" />
                 <span>
                   <strong>Dano:</strong> {danoFormula}
                 </span>
@@ -208,11 +207,11 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             )}
 
             {magia.tipos_dano && magia.tipos_dano.length > 0 && (
-              <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1">
                 {magia.tipos_dano.map((td) => (
                   <span
                     key={td}
-                    className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border shadow-xs ${getTipoDanoBadgeClass(td)}`}
+                    className={`px-2.5 py-1 rounded text-xs font-semibold border ${getTipoDanoBadgeClass(td)}`}
                   >
                     {td}
                   </span>
@@ -223,46 +222,45 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
 
           {/* Spell Description (Markdown) */}
           <div>
-            <h4 className="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>Descrição da Magia</span>
-              <span className="text-xs font-mono font-normal text-indigo-300 bg-indigo-950/80 px-2.5 py-0.5 rounded-md border border-indigo-800/60">
+              <span className="text-[10px] font-mono font-normal text-indigo-400/80 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">
                 Formatado em Markdown
               </span>
             </h4>
-            <div className="p-4 sm:p-5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+            <div className="p-4 rounded bg-slate-950 border border-slate-800 shadow-inner">
               <MarkdownRenderer content={magia.descricao} />
             </div>
           </div>
 
           {/* Classes de Conjuradores (N:M) */}
           <div>
-            <h4 className="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-              <Users className="w-4 h-4 text-emerald-400" /> Classes que Conjuram
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-emerald-400" /> Classes que Conjuram
             </h4>
             <div className="flex flex-wrap gap-2">
               {magia.conjuradores && magia.conjuradores.length > 0 ? (
                 magia.conjuradores.map((c) => (
                   <span
                     key={c.id_conjurador}
-                    className="px-3 py-2 rounded-xl bg-slate-950 border border-emerald-700/60 text-emerald-300 text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-xs"
+                    className="px-3 py-1 rounded bg-slate-950 border border-emerald-700/50 text-emerald-300 text-xs font-semibold"
                   >
-                    <ClassPictogram classe={c.classe} size="xs" />
-                    <span>{c.classe}</span>
+                    {c.classe}
                   </span>
                 ))
               ) : (
-                <span className="text-sm text-slate-500 italic">Nenhuma classe associada.</span>
+                <span className="text-xs text-slate-500 italic">Nenhuma classe associada.</span>
               )}
             </div>
           </div>
 
           {/* Livro de Origem */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs sm:text-sm text-slate-400">
-            <span className="flex items-center gap-2">
+          <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span className="flex items-center gap-1.5">
               <BookOpen className="w-4 h-4 text-slate-500" /> Fonte / Livro:{' '}
               <strong className="text-slate-200">{magia.nome_livro || 'Livro Padrão'}</strong>
             </span>
-            <span className="font-mono">ID: #{magia.id_magia}</span>
+            <span>ID da Magia: #{magia.id_magia}</span>
           </div>
 
         </div>
@@ -273,7 +271,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             <button
               id="btn-detail-duplicate"
               onClick={() => onDuplicate(magia)}
-              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
               title="Duplicar informações para nova magia"
             >
               <Copy className="w-3.5 h-3.5" /> Duplicar
@@ -281,7 +279,7 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             <button
               id="btn-detail-delete"
               onClick={() => onDelete(magia)}
-              className="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900/90 text-rose-300 border border-rose-800/60 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-3 py-2 rounded bg-rose-950/70 hover:bg-rose-900/90 text-rose-300 border border-rose-800/60 text-xs font-semibold flex items-center gap-1.5 transition-colors"
               title="Apagar magia (Exige PIN 1998)"
             >
               <Trash2 className="w-3.5 h-3.5" /> Apagar
@@ -292,14 +290,14 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
             <button
               id="btn-detail-edit"
               onClick={() => onEdit(magia)}
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all"
+              className="px-4 py-2 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all"
             >
               <Edit className="w-3.5 h-3.5 stroke-[2.5]" /> Editar Magia
             </button>
             <button
               id="btn-detail-close"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+              className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
             >
               Fechar
             </button>

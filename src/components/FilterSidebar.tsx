@@ -27,7 +27,6 @@ import {
   FORMAS,
 } from '../types';
 import { formatCirculo, getEscolaColor, getTipoDanoBadgeClass } from '../utils/magicHelpers';
-import { ClassPictogram } from './ClassPictogram';
 
 interface FilterSidebarProps {
   filtros: FiltrosMagia;
@@ -120,23 +119,6 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     }
   };
 
-  const totalConjuradores = metadata?.conjuradores.length || 0;
-  const todosConjuradoresSelecionados =
-    totalConjuradores > 0 &&
-    filtros.conjuradores_ids &&
-    filtros.conjuradores_ids.length === totalConjuradores;
-
-  const toggleTodosConjuradores = () => {
-    if (todosConjuradoresSelecionados) {
-      onChangeFiltros({ ...filtros, conjuradores_ids: undefined });
-    } else if (metadata?.conjuradores) {
-      onChangeFiltros({
-        ...filtros,
-        conjuradores_ids: metadata.conjuradores.map((c) => c.id_conjurador),
-      });
-    }
-  };
-
   const toggleLivro = (id: number) => {
     const current = filtros.livros_ids || [];
     const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
@@ -149,8 +131,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       <div className="p-4 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-indigo-400" />
-          <h2 className="text-base font-bold uppercase tracking-wider text-slate-200">Filtros Avançados</h2>
-          <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-xs font-bold text-indigo-400">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">Filtros Avançados</h2>
+          <span className="px-2 py-0.5 rounded bg-slate-800 text-xs font-semibold text-indigo-400 border border-slate-700">
             {totalResultados}
           </span>
         </div>
@@ -160,10 +142,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               id="btn-clear-filters"
               onClick={onResetFiltros}
-              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold hover:underline transition-all"
+              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium hover:underline transition-all"
               title="Limpar todos os filtros"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3 h-3" />
               Limpar
             </button>
           )}
@@ -171,7 +153,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <button
               id="btn-close-filter-mobile"
               onClick={onCloseMobile}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 md:hidden"
+              className="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 md:hidden"
             >
               <X className="w-5 h-5" />
             </button>
@@ -186,10 +168,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="border-b border-slate-800/80 pb-4">
           <button
             onClick={() => toggleSection('circulo')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-indigo-400" /> Círculo de Magia
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> Círculo de Magia
             </span>
             {openSections.circulo ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -203,13 +185,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     id={`filter-circulo-${c}`}
                     type="button"
                     onClick={() => toggleCirculo(c)}
-                    className={`py-2 rounded-lg text-xs sm:text-sm font-bold transition-all border ${
+                    className={`py-1.5 rounded text-xs font-bold transition-all border ${
                       selected
                         ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm shadow-indigo-500/20'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
-                    {c === 0 ? 'Truque' : `${c}º`}
+                    {c === 0 ? 'T' : c}
                   </button>
                 );
               })}
@@ -217,19 +199,19 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           )}
         </div>
 
-        {/* 2. Escolas de Magia (Strict ENUM) */}
+        {/* 2. Escolas de Magia (Strict ENUM - 3 Colunas de Largura Fixa) */}
         <div className="border-b border-slate-800/80 pb-4">
           <button
             onClick={() => toggleSection('escola')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Shield className="w-4 h-4 text-indigo-400" /> Escolas ({ESCOLAS.length})
+              <Shield className="w-3.5 h-3.5 text-indigo-400" /> Escolas ({ESCOLAS.length})
             </span>
             {openSections.escola ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
           {openSections.escola && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="grid grid-cols-3 gap-1.5 pt-1">
               {ESCOLAS.map((escola) => {
                 const selected = filtros.escolas?.includes(escola);
                 const colors = getEscolaColor(escola);
@@ -239,11 +221,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     id={`filter-escola-${escola}`}
                     type="button"
                     onClick={() => toggleEscola(escola)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                    className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                       selected
                         ? `${colors.badge} font-bold ring-1 ring-indigo-400/50 shadow-xs`
-                        : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:border-slate-700'
+                        : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
+                    title={escola}
                   >
                     {escola}
                   </button>
@@ -253,32 +236,19 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           )}
         </div>
 
-        {/* 3. Conjuradores (N:M - Organizados em 2 Colunas com Pictogramas) */}
+        {/* 3. Conjuradores (N:M - 3 Colunas de Largura Fixa) */}
         <div className="border-b border-slate-800/80 pb-4">
-          <div className="w-full flex items-center justify-between mb-2.5">
-            <button
-              onClick={() => toggleSection('conjuradores')}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider"
-            >
-              <Users className="w-4 h-4 text-emerald-400" /> Conjuradores ({totalConjuradores})
-              {openSections.conjuradores ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
-            </button>
-            <button
-              type="button"
-              id="btn-filter-conjurador-qualquer"
-              onClick={toggleTodosConjuradores}
-              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1 ${
-                todosConjuradoresSelecionados
-                  ? 'bg-emerald-600 text-white border-emerald-400 font-bold shadow-xs'
-                  : 'bg-emerald-950/70 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/80 hover:text-emerald-200'
-              }`}
-            >
-              <CheckCheck className="w-3.5 h-3.5" />
-              <span>{todosConjuradoresSelecionados ? 'Todos Ativos' : 'Qualquer (Todos)'}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => toggleSection('conjuradores')}
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+          >
+            <span className="flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-emerald-400" /> Conjuradores ({metadata?.conjuradores.length || 0})
+            </span>
+            {openSections.conjuradores ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
           {openSections.conjuradores && (
-            <div className="grid grid-cols-2 gap-1.5 pt-1 max-h-60 overflow-y-auto pr-1">
+            <div className="grid grid-cols-3 gap-1.5 pt-1 max-h-56 overflow-y-auto pr-0.5">
               {(metadata?.conjuradores || []).map((c) => {
                 const selected = filtros.conjuradores_ids?.includes(c.id_conjurador);
                 return (
@@ -287,14 +257,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     id={`filter-conjurador-${c.id_conjurador}`}
                     type="button"
                     onClick={() => toggleConjurador(c.id_conjurador)}
-                    className={`px-2.5 py-2 rounded-lg text-xs font-semibold border transition-all flex items-center gap-2 text-left group ${
+                    className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                       selected
-                        ? 'bg-emerald-950/90 text-emerald-200 border-emerald-500 font-bold ring-1 ring-emerald-500/40 shadow-sm'
+                        ? 'bg-emerald-950 text-emerald-200 border-emerald-600 font-bold shadow-xs'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
+                    title={c.classe}
                   >
-                    <ClassPictogram classe={c.classe} size="xs" />
-                    <span className="truncate">{c.classe}</span>
+                    {c.classe}
                   </button>
                 );
               })}
@@ -302,28 +272,28 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
           )}
         </div>
 
-        {/* 4. Tipos de Dano (N:M - Strict ENUM) */}
+        {/* 4. Tipos de Dano (N:M - Strict ENUM - 3 Colunas de Largura Fixa) */}
         <div className="border-b border-slate-800/80 pb-4">
           <div className="w-full flex items-center justify-between mb-2.5">
             <button
               onClick={() => toggleSection('dano')}
-              className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-300 uppercase tracking-wider"
             >
-              <Flame className="w-4 h-4 text-indigo-400" /> Tipos de Dano ({TIPOS_DANO.length})
+              <Flame className="w-3.5 h-3.5 text-indigo-400" /> Tipos de Dano ({TIPOS_DANO.length})
               {openSections.dano ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
             </button>
             <button
               type="button"
               id="btn-filter-dano-qualquer"
               onClick={toggleTodosDanos}
-              className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1 ${
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 ${
                 todosDanosSelecionados
                   ? 'bg-indigo-600 text-white border-indigo-400 font-bold shadow-xs'
                   : 'bg-indigo-950/70 text-indigo-300 border-indigo-800/60 hover:bg-indigo-900/80 hover:text-indigo-200'
               }`}
               title="Selecionar todos os tipos de dano ou desmarcar"
             >
-              <CheckCheck className="w-3.5 h-3.5" />
+              <CheckCheck className="w-3 h-3" />
               {todosDanosSelecionados ? 'Desmarcar Todos' : 'Qualquer (Todos)'}
             </button>
           </div>
@@ -334,17 +304,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 type="button"
                 id="filter-dano-qualquer-pill"
                 onClick={toggleTodosDanos}
-                className={`w-full text-center py-2 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                className={`w-full text-center py-1.5 px-3 rounded text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
                   todosDanosSelecionados
                     ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white border-indigo-400 shadow-sm shadow-indigo-500/25'
                     : 'bg-slate-900/90 text-indigo-300 border-indigo-900/60 hover:border-indigo-600 hover:bg-indigo-950/50'
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                 <span>{todosDanosSelecionados ? '✓ Todos os Danos Selecionados' : 'Qualquer Dano (Selecionar Todos)'}</span>
               </button>
 
-              <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+              <div className="grid grid-cols-3 gap-1.5 max-h-56 overflow-y-auto pr-0.5">
                 {TIPOS_DANO.map((td) => {
                   const selected = filtros.tipos_dano?.includes(td);
                   const badgeClass = getTipoDanoBadgeClass(td);
@@ -354,11 +324,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       id={`filter-dano-${td}`}
                       type="button"
                       onClick={() => toggleTipoDano(td)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                      className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                         selected
                           ? `${badgeClass} font-bold ring-1 ring-indigo-400/50 shadow-xs`
-                          : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                          : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                       }`}
+                      title={td}
                     >
                       {td}
                     </button>
@@ -373,10 +344,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="border-b border-slate-800/80 pb-4">
           <button
             onClick={() => toggleSection('livros')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Book className="w-4 h-4 text-indigo-400" /> Livros de Origem
+              <Book className="w-3.5 h-3.5 text-indigo-400" /> Livros de Origem
             </span>
             {openSections.livros ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -390,10 +361,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     id={`filter-livro-${l.id_livro}`}
                     type="button"
                     onClick={() => toggleLivro(l.id_livro)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium border transition-all truncate block ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs border transition-all truncate block ${
                       selected
                         ? 'bg-indigo-950/80 text-indigo-200 border-indigo-600 font-bold'
-                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
                     {l.nome_livro}
@@ -408,17 +379,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="border-b border-slate-800/80 pb-4">
           <button
             onClick={() => toggleSection('componentes')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-pink-400" /> Componentes
+              <Layers className="w-3.5 h-3.5 text-pink-400" /> Componentes
             </span>
             {openSections.componentes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
           {openSections.componentes && (
-            <div className="space-y-2.5 pt-1 text-xs sm:text-sm">
+            <div className="space-y-2 pt-1 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Verbal (V)</span>
+                <span className="text-slate-300">Verbal (V)</span>
                 <div className="flex gap-1">
                   <button
                     type="button"
@@ -428,10 +399,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         componente_verbal: filtros.componente_verbal === true ? undefined : true,
                       })
                     }
-                    className={`px-3 py-1 rounded-lg text-xs font-bold border ${
+                    className={`px-2.5 py-1 rounded text-xs border transition-all ${
                       filtros.componente_verbal === true
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400 shadow-xs'
+                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     Sim
@@ -440,7 +411,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Somático (S)</span>
+                <span className="text-slate-300">Somático (S)</span>
                 <div className="flex gap-1">
                   <button
                     type="button"
@@ -450,10 +421,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         componente_somatico: filtros.componente_somatico === true ? undefined : true,
                       })
                     }
-                    className={`px-3 py-1 rounded-lg text-xs font-bold border ${
+                    className={`px-2.5 py-1 rounded text-xs border transition-all ${
                       filtros.componente_somatico === true
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400 shadow-xs'
+                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     Sim
@@ -462,7 +433,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Material (M)</span>
+                <span className="text-slate-300">Material (M)</span>
                 <div className="flex gap-1">
                   <button
                     type="button"
@@ -472,10 +443,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         componente_material: filtros.componente_material === true ? undefined : true,
                       })
                     }
-                    className={`px-3 py-1 rounded-lg text-xs font-bold border ${
+                    className={`px-2.5 py-1 rounded text-xs border transition-all ${
                       filtros.componente_material === true
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400 shadow-xs'
+                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     Sim
@@ -484,7 +455,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Consome Material</span>
+                <span className="text-slate-300">Consome Material</span>
                 <div className="flex gap-1">
                   <button
                     type="button"
@@ -494,10 +465,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         consumo_material: filtros.consumo_material === true ? undefined : true,
                       })
                     }
-                    className={`px-3 py-1 rounded-lg text-xs font-bold border ${
+                    className={`px-2.5 py-1 rounded text-xs border transition-all ${
                       filtros.consumo_material === true
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
+                        ? 'bg-indigo-600 text-white font-bold border-indigo-400 shadow-xs'
+                        : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     Sim
@@ -512,17 +483,17 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="border-b border-slate-800/80 pb-4">
           <button
             onClick={() => toggleSection('regras')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Swords className="w-4 h-4 text-rose-400" /> Combate & Regras
+              <Swords className="w-3.5 h-3.5 text-rose-400" /> Combate & Regras
             </span>
             {openSections.regras ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
           {openSections.regras && (
-            <div className="space-y-3 pt-1 text-xs sm:text-sm">
+            <div className="space-y-3 pt-1 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Concentração</span>
+                <span className="text-slate-300">Concentração</span>
                 <button
                   type="button"
                   onClick={() =>
@@ -531,10 +502,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       concentracao: filtros.concentracao === true ? undefined : true,
                     })
                   }
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
+                  className={`px-2.5 py-1 rounded text-xs border transition-all ${
                     filtros.concentracao === true
                       ? 'bg-indigo-600 text-white font-bold border-indigo-400 shadow-xs'
-                      : 'bg-slate-900 text-slate-300 border-slate-800 hover:text-white'
+                      : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   Exige Concentração
@@ -542,7 +513,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-medium">Ataque com Magia</span>
+                <span className="text-slate-300">Ataque com Magia</span>
                 <button
                   type="button"
                   onClick={() =>
@@ -551,10 +522,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       ataque: filtros.ataque === true ? undefined : true,
                     })
                   }
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${
+                  className={`px-2.5 py-1 rounded text-xs border transition-all ${
                     filtros.ataque === true
                       ? 'bg-rose-600 text-white font-bold border-rose-500 shadow-xs'
-                      : 'bg-slate-900 text-slate-300 border-slate-800 hover:text-white'
+                      : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   Exige Ataque
@@ -562,8 +533,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </div>
 
               <div>
-                <span className="text-slate-300 font-medium block mb-2">Teste de Salvaguarda (Resistência)</span>
-                <div className="grid grid-cols-3 gap-1.5">
+                <span className="text-slate-300 block mb-1.5">Teste de Salvaguarda (Resistência)</span>
+                <div className="grid grid-cols-3 gap-1">
                   {ATRIBUTOS.map((attr) => {
                     const selected = filtros.atributo_salvaguarda === attr;
                     return (
@@ -577,10 +548,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                             salvaguarda: selected ? undefined : true,
                           })
                         }
-                        className={`py-1.5 rounded-lg text-xs font-bold border ${
+                        className={`py-1 rounded text-xs font-semibold border transition-all ${
                           selected
                             ? 'bg-cyan-600 text-white border-cyan-400 shadow-xs'
-                            : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                            : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700'
                         }`}
                       >
                         {attr}
@@ -597,15 +568,15 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="pb-4">
           <button
             onClick={() => toggleSection('formas')}
-            className="w-full flex items-center justify-between text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2.5"
+            className="w-full flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5"
           >
             <span className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-teal-400" /> Formas de Área
+              <Layers className="w-3.5 h-3.5 text-teal-400" /> Formas de Área
             </span>
             {openSections.formas ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
           {openSections.formas && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="grid grid-cols-3 gap-1.5 pt-1">
               {FORMAS.map((forma) => {
                 const selected = filtros.forma === forma;
                 return (
@@ -618,10 +589,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                         forma: selected ? undefined : forma,
                       })
                     }
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                    className={`w-full py-1.5 px-1 text-center justify-center flex items-center rounded text-[11px] font-medium whitespace-nowrap border transition-all ${
                       selected
                         ? 'bg-teal-950 text-teal-200 border-teal-500 font-bold shadow-xs'
-                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:bg-slate-850'
                     }`}
                   >
                     {forma}
@@ -641,7 +612,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Desktop Sidebar */}
       <aside
         id="desktop-filter-sidebar"
-        className="hidden md:block w-72 lg:w-80 shrink-0 bg-slate-950 border-r border-slate-800 h-[calc(100vh-4rem)] sticky top-16"
+        className="hidden md:block w-80 lg:w-84 xl:w-92 shrink-0 bg-slate-950 border-r border-slate-800 h-[calc(100vh-4rem)] sticky top-16"
       >
         {sidebarContent}
       </aside>
@@ -655,7 +626,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         >
           <div
             id="mobile-filter-drawer"
-            className="w-4/5 max-w-sm h-full bg-slate-950 border-r border-slate-800 shadow-2xl"
+            className="w-[340px] max-w-[90vw] h-full bg-slate-950 border-r border-slate-800 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {sidebarContent}
