@@ -255,7 +255,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </button>
 
         {openSections.conjuradores && (
-          <div className="grid grid-cols-2 gap-1 pt-2 max-h-48 overflow-y-auto pr-0.5">
+          <div className="grid grid-cols-2 gap-1 pt-2">
             {(metadata?.conjuradores || []).map((c) => {
               const selected = filtros.conjuradores_ids?.includes(c.id_conjurador);
               return (
@@ -306,7 +306,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
 
         {openSections.dano && (
-          <div className="grid grid-cols-2 gap-1 pt-2 max-h-48 overflow-y-auto pr-0.5">
+          <div className="grid grid-cols-2 gap-1 pt-2">
             {TIPOS_DANO.map((td) => {
               const selected = filtros.tipos_dano?.includes(td);
               const badgeClass = getTipoDanoBadgeClass(td);
@@ -495,7 +495,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </button>
 
         {openSections.livros && (
-          <div className="space-y-1 pt-2 max-h-40 overflow-y-auto pr-0.5">
+          <div className="space-y-1 pt-2">
             {(metadata?.livros || []).map((l) => {
               const selected = filtros.livros_ids?.includes(l.id_livro);
               return (

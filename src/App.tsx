@@ -349,7 +349,7 @@ export default function App() {
       />
 
       {/* Main Layout: Left Sidebar + Content Area */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex max-w-[1440px] w-full mx-auto">
         
         {/* Left Filter Sidebar (Sticky, Collapsible on Desktop, Slide-over on Mobile) */}
         <FilterSidebar
@@ -550,7 +550,7 @@ export default function App() {
         ) : viewMode === 'grid' ? (
           <div
             id="grid-spells"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-4.5"
           >
             {magias.map((magia) => (
               <SpellCard

@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header id="main-navbar" className="sticky top-0 z-40 bg-slate-950/95 border-b border-slate-800/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-12 sm:h-13 gap-2 sm:gap-4">
           
           {/* Logo with Grimoire Icon & Compact Connection Pill */}
