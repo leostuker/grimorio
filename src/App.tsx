@@ -42,9 +42,11 @@ import { ManageEntitiesModal } from './components/ManageEntitiesModal';
 import { SchemaDocModal } from './components/SchemaDocModal';
 import { SecurityPinModal } from './components/SecurityPinModal';
 import { DbConnectionModal } from './components/DbConnectionModal';
+import { SpellSelectionStudioModal } from './components/SpellSelectionStudioModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import { GrimoireIcon } from './components/GrimoireIcon';
 import { formatCirculo, getEscolaColor } from './utils/magicHelpers';
+import { Printer, CheckSquare, Square } from 'lucide-react';
 
 export default function App() {
   // Estado de Dados
@@ -69,6 +71,48 @@ export default function App() {
   const [isDocSchemaOpen, setIsDocSchemaOpen] = useState(false);
   const [isDbModalOpen, setIsDbModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
+
+  // Deck de Cartas Selecionadas para Impressão & Exportação
+  const [selectedSpellsMap, setSelectedSpellsMap] = useState<Record<number, MagiaCompleta>>({});
+
+  const selectedSpellsList = useMemo(() => {
+    return Object.values(selectedSpellsMap);
+  }, [selectedSpellsMap]);
+
+  const toggleSelectSpell = useCallback((magia: MagiaCompleta) => {
+    setSelectedSpellsMap((prev) => {
+      const next = { ...prev };
+      if (next[magia.id_magia]) {
+        delete next[magia.id_magia];
+      } else {
+        next[magia.id_magia] = magia;
+      }
+      return next;
+    });
+  }, []);
+
+  const handleSelectAllVisible = useCallback(() => {
+    setSelectedSpellsMap((prev) => {
+      const next = { ...prev };
+      magias.forEach((m) => {
+        next[m.id_magia] = m;
+      });
+      return next;
+    });
+  }, [magias]);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedSpellsMap({});
+  }, []);
+
+  const handleRemoveSpellFromDeck = useCallback((id_magia: number) => {
+    setSelectedSpellsMap((prev) => {
+      const next = { ...prev };
+      delete next[id_magia];
+      return next;
+    });
+  }, []);
 
   // Trava de Segurança Modal
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
@@ -346,6 +390,8 @@ export default function App() {
         onOpenDocSchema={() => setIsDocSchemaOpen(true)}
         onExportCSV={handleExportCSV}
         onOpenDbStatus={() => setIsDbModalOpen(true)}
+        selectedCount={selectedSpellsList.length}
+        onOpenStudio={() => setIsStudioOpen(true)}
       />
 
       {/* Main Layout: Left Sidebar + Content Area */}
@@ -507,6 +553,73 @@ export default function App() {
               </div>
             )}
 
+            {/* Selection & Print Deck Toolbar */}
+            <div
+              id="deck-selection-toolbar"
+              className={`flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border transition-all ${
+                selectedSpellsList.length > 0
+                  ? 'bg-indigo-950/40 border-indigo-500/40 shadow-sm'
+                  : 'bg-slate-900/40 border-slate-800/60'
+              }`}
+            >
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                  <Printer className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Deck de Impressão:</span>
+                </span>
+                
+                {selectedSpellsList.length > 0 ? (
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white shadow-xs">
+                    {selectedSpellsList.length} {selectedSpellsList.length === 1 ? 'carta selecionada' : 'cartas selecionadas'}
+                  </span>
+                ) : (
+                  <span className="text-xs text-slate-400">
+                    Nenhuma carta selecionada
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  id="btn-select-all-visible"
+                  type="button"
+                  onClick={handleSelectAllVisible}
+                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors flex items-center gap-1"
+                  title="Selecionar todas as magias filtradas no deck"
+                >
+                  <CheckSquare className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Selecionar Visíveis ({magias.length})</span>
+                </button>
+
+                {selectedSpellsList.length > 0 && (
+                  <button
+                    id="btn-clear-selection-deck"
+                    type="button"
+                    onClick={handleClearSelection}
+                    className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-medium transition-colors"
+                    title="Limpar seleção"
+                  >
+                    Limpar
+                  </button>
+                )}
+
+                <button
+                  id="btn-open-deck-studio-main"
+                  type="button"
+                  onClick={() => setIsStudioOpen(true)}
+                  className={`px-3 py-1 rounded text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all ${
+                    selectedSpellsList.length > 0
+                      ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30 ring-1 ring-indigo-400/40 animate-pulse'
+                      : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                  }`}
+                  title="Abrir Estúdio para Visualizar, Escolher Formatos (89x146mm ou 178x146mm), Imprimir ou Exportar PNG"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Estúdio de Cartas {selectedSpellsList.length > 0 ? `(${selectedSpellsList.length})` : ''}</span>
+                </button>
+              </div>
+            </div>
+
           </div>
 
         {/* Spell Content Grid or Table */}
@@ -559,6 +672,8 @@ export default function App() {
                 onView={setSelectedSpellForView}
                 onEdit={handleOpenEditSpell}
                 onDelete={handleDeleteSpell}
+                isSelected={Boolean(selectedSpellsMap[magia.id_magia])}
+                onToggleSelect={toggleSelectSpell}
               />
             ))}
           </div>
@@ -571,6 +686,26 @@ export default function App() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/80 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                  <th className="py-3 px-3 w-10 text-center">
+                    <input
+                      id="checkbox-table-select-all"
+                      type="checkbox"
+                      checked={magias.length > 0 && magias.every((m) => selectedSpellsMap[m.id_magia])}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          handleSelectAllVisible();
+                        } else {
+                          setSelectedSpellsMap((prev) => {
+                            const next = { ...prev };
+                            magias.forEach((m) => delete next[m.id_magia]);
+                            return next;
+                          });
+                        }
+                      }}
+                      className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      title="Selecionar todas as visíveis"
+                    />
+                  </th>
                   <th className="py-3 px-3 sm:px-4">Nome & Círculo</th>
                   <th className="py-3 px-3 sm:px-4">Escola</th>
                   <th className="py-3 px-3 sm:px-4 hidden md:table-cell">Tempo</th>
@@ -584,14 +719,33 @@ export default function App() {
               <tbody className="divide-y divide-slate-800/60">
                 {magias.map((m) => {
                   const escolaColors = getEscolaColor(m.escola);
+                  const isSelected = Boolean(selectedSpellsMap[m.id_magia]);
                   return (
                     <tr
                       key={m.id_magia}
-                      className="hover:bg-slate-850/80 transition-colors group cursor-pointer"
+                      className={`transition-colors group cursor-pointer ${
+                        isSelected
+                          ? 'bg-indigo-950/30 hover:bg-indigo-950/50'
+                          : 'hover:bg-slate-850/80'
+                      }`}
                       onClick={() => setSelectedSpellForView(m)}
                     >
+                      <td
+                        className="py-2.5 px-3 text-center"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSelectSpell(m);
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => {}}
+                          className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        />
+                      </td>
                       <td className="py-2.5 px-3 sm:px-4">
-                        <div className="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">
+                        <div className={`font-bold transition-colors ${isSelected ? 'text-indigo-300' : 'text-slate-100 group-hover:text-indigo-400'}`}>
                           {m.nome_magia}
                         </div>
                         <span className="text-[10px] text-indigo-400 font-semibold">
@@ -681,6 +835,9 @@ export default function App() {
         onEdit={handleOpenEditSpell}
         onDelete={handleDeleteSpell}
         onDuplicate={handleOpenDuplicateSpell}
+        isSelected={Boolean(selectedSpellForView && selectedSpellsMap[selectedSpellForView.id_magia])}
+        onToggleSelect={toggleSelectSpell}
+        onOpenStudio={() => setIsStudioOpen(true)}
       />
 
       {/* 2. Modal de Formulário (Criar/Editar) */}
@@ -737,7 +894,16 @@ export default function App() {
         }}
       />
 
-      {/* 7. Modal da Trava de Segurança (PIN 1998) */}
+      {/* 7. Modal de Estúdio de Seleção de Cartas & Impressão / Exportação PNG */}
+      <SpellSelectionStudioModal
+        isOpen={isStudioOpen}
+        onClose={() => setIsStudioOpen(false)}
+        selectedSpells={selectedSpellsList}
+        onRemoveSpell={handleRemoveSpellFromDeck}
+        onClearAll={handleClearSelection}
+      />
+
+      {/* 8. Modal da Trava de Segurança (PIN 1998) */}
       <SecurityPinModal
         isOpen={isPinModalOpen}
         onClose={() => {
@@ -752,6 +918,23 @@ export default function App() {
         }
         actionDescription="Para apagar esta magia do banco de dados, digite a senha de segurança autorizada."
       />
+
+      {/* Floating Action Button (FAB) when cards are selected */}
+      {selectedSpellsList.length > 0 && !isStudioOpen && (
+        <div
+          id="btn-open-selection-deck-floating"
+          className="fixed bottom-5 right-5 z-40 animate-in fade-in slide-in-from-bottom-4 duration-200"
+        >
+          <button
+            type="button"
+            onClick={() => setIsStudioOpen(true)}
+            className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/40 border border-indigo-400/40 transition-all hover:scale-105 active:scale-95"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Deck de Cartas ({selectedSpellsList.length})</span>
+          </button>
+        </div>
+      )}
 
       {/* Toasts */}
       <ToastContainer toasts={toasts} onDismiss={removeToast} />

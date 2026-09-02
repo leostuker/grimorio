@@ -17,6 +17,8 @@ import {
   Coins,
   AlertCircle,
   Crosshair,
+  Check,
+  Printer,
 } from 'lucide-react';
 import { MagiaCompleta } from '../types';
 import {
@@ -35,6 +37,9 @@ interface SpellDetailModalProps {
   onEdit: (magia: MagiaCompleta) => void;
   onDelete: (magia: MagiaCompleta) => void;
   onDuplicate: (magia: MagiaCompleta) => void;
+  isSelected?: boolean;
+  onToggleSelect?: (magia: MagiaCompleta) => void;
+  onOpenStudio?: () => void;
 }
 
 export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
@@ -44,6 +49,9 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
+  isSelected = false,
+  onToggleSelect,
+  onOpenStudio,
 }) => {
   if (!isOpen || !magia) return null;
 
@@ -69,17 +77,46 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
         {/* Header Ribbon */}
         <div className={`p-6 border-b border-slate-800 ${escolaColor.bg}`}>
           <div className="flex items-start justify-between gap-4">
-            <h2 className="text-2xl font-black text-slate-100 tracking-tight">
-              {magia.nome_magia}
-            </h2>
+            <div>
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span className="text-xs font-black px-2.5 py-0.5 rounded bg-black/25 text-white border border-white/20">
+                  {formatCirculo(magia.circulo)}
+                </span>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-black/20 text-white/90 border border-white/20">
+                  {magia.escola}
+                </span>
+              </div>
+              <h2 className="text-2xl font-black text-slate-100 tracking-tight">
+                {magia.nome_magia}
+              </h2>
+            </div>
 
-            <button
-              id="btn-close-detail-modal"
-              onClick={onClose}
-              className="p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              {onToggleSelect && (
+                <button
+                  id="btn-detail-toggle-select"
+                  type="button"
+                  onClick={() => onToggleSelect(magia)}
+                  className={`px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1.5 border transition-all ${
+                    isSelected
+                      ? 'bg-indigo-600 border-indigo-400 text-white shadow-md'
+                      : 'bg-slate-900/90 hover:bg-slate-800 border-slate-700 text-slate-200'
+                  }`}
+                  title={isSelected ? 'Carta selecionada no Deck' : 'Adicionar ao Deck de Cartas'}
+                >
+                  <Check className={`w-3.5 h-3.5 ${isSelected ? 'stroke-[3]' : 'opacity-60'}`} />
+                  <span>{isSelected ? 'Selecionada' : 'Selecionar Carta'}</span>
+                </button>
+              )}
+
+              <button
+                id="btn-close-detail-modal"
+                onClick={onClose}
+                className="p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -263,6 +300,23 @@ export const SpellDetailModal: React.FC<SpellDetailModalProps> = ({
         {/* Modal Footer Actions */}
         <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
+            {onOpenStudio && (
+              <button
+                id="btn-detail-open-studio"
+                onClick={() => {
+                  if (!isSelected && onToggleSelect) {
+                    onToggleSelect(magia);
+                  }
+                  onOpenStudio();
+                }}
+                className="px-3 py-2 rounded bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-indigo-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                title="Abrir no Estúdio de Cartas & Impressão"
+              >
+                <Printer className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden sm:inline">Estúdio de Cartas</span>
+              </button>
+            )}
+
             <button
               id="btn-detail-duplicate"
               onClick={() => onDuplicate(magia)}

@@ -6,6 +6,7 @@ import {
   Shield,
   Layers,
   Crosshair,
+  Check,
 } from 'lucide-react';
 import { MagiaCompleta } from '../types';
 import {
@@ -21,11 +22,15 @@ interface SpellCardProps {
   onView: (magia: MagiaCompleta) => void;
   onEdit?: (magia: MagiaCompleta) => void;
   onDelete?: (magia: MagiaCompleta) => void;
+  isSelected?: boolean;
+  onToggleSelect?: (magia: MagiaCompleta) => void;
 }
 
 export const SpellCard: React.FC<SpellCardProps> = ({
   magia,
   onView,
+  isSelected = false,
+  onToggleSelect,
 }) => {
   const escolaColor = getEscolaColor(magia.escola);
   const danoFormula = formatDanoFormula(
@@ -38,23 +43,50 @@ export const SpellCard: React.FC<SpellCardProps> = ({
     <div
       id={`spell-card-${magia.id_magia}`}
       onClick={() => onView(magia)}
-      className="group relative bg-slate-900/90 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-md p-5 shadow-lg transition-all duration-200 flex flex-col justify-between cursor-pointer"
+      className={`group relative rounded-md p-5 shadow-lg transition-all duration-200 flex flex-col justify-between cursor-pointer border ${
+        isSelected
+          ? 'bg-slate-900 border-indigo-500 ring-1 ring-indigo-500/60 shadow-indigo-500/15'
+          : 'bg-slate-900/90 hover:bg-slate-900 border-slate-800 hover:border-slate-700'
+      }`}
     >
       {/* Top Header */}
       <div>
-        <div className="flex items-center gap-2 flex-wrap mb-2">
-          <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 whitespace-nowrap">
-            {formatCirculo(magia.circulo)}
-          </span>
-          <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded border whitespace-nowrap ${escolaColor.badge}`}
-          >
-            {magia.escola}
-          </span>
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 whitespace-nowrap">
+              {formatCirculo(magia.circulo)}
+            </span>
+            <span
+              className={`text-xs font-semibold px-2.5 py-0.5 rounded border whitespace-nowrap ${escolaColor.badge}`}
+            >
+              {magia.escola}
+            </span>
+          </div>
+
+          {/* Quick Selection Checkbox */}
+          {onToggleSelect && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSelect(magia);
+              }}
+              className={`p-1 rounded-md border transition-all flex items-center justify-center ${
+                isSelected
+                  ? 'bg-indigo-600 border-indigo-400 text-white shadow-xs'
+                  : 'bg-slate-950/80 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-500'
+              }`}
+              title={isSelected ? 'Desmarcar da seleção de cartas' : 'Selecionar para deck de cartas'}
+            >
+              <Check className={`w-3.5 h-3.5 ${isSelected ? 'opacity-100 stroke-[3]' : 'opacity-0 hover:opacity-50'}`} />
+            </button>
+          )}
         </div>
 
         <h3
-          className="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors truncate mb-2.5"
+          className={`text-lg font-bold transition-colors truncate mb-2.5 ${
+            isSelected ? 'text-indigo-300' : 'text-slate-100 group-hover:text-indigo-400'
+          }`}
           title={magia.nome_magia}
         >
           {magia.nome_magia}

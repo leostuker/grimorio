@@ -8,6 +8,8 @@ import {
   Download,
   MoreVertical,
   X,
+  Printer,
+  Sparkles,
 } from 'lucide-react';
 import { MetadataBanco } from '../types';
 import { GrimoireIcon } from './GrimoireIcon';
@@ -22,6 +24,8 @@ interface NavbarProps {
   onOpenDocSchema: () => void;
   onExportCSV: () => void;
   onOpenDbStatus?: () => void;
+  selectedCount?: number;
+  onOpenStudio?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -34,6 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenDocSchema,
   onExportCSV,
   onOpenDbStatus,
+  selectedCount = 0,
+  onOpenStudio,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -130,6 +136,28 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Search className="w-4 h-4" />
             </button>
 
+            {/* Estúdio de Cartas / Impressão Deck */}
+            {onOpenStudio && (
+              <button
+                id="btn-nav-open-studio"
+                onClick={onOpenStudio}
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border text-xs font-semibold transition-all ${
+                  selectedCount > 0
+                    ? 'bg-indigo-950/90 border-indigo-500/60 text-indigo-200 hover:bg-indigo-900 shadow-xs'
+                    : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300'
+                }`}
+                title="Abrir Estúdio de Cartas para Visualização, Impressão e Exportação PNG"
+              >
+                <Printer className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden sm:inline">Cartas</span>
+                {selectedCount > 0 && (
+                  <span className="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-[10px] font-bold">
+                    {selectedCount}
+                  </span>
+                )}
+              </button>
+            )}
+
             {/* Manage entities */}
             <button
               id="btn-nav-manage-entities"
@@ -201,6 +229,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-md shadow-2xl py-1 text-xs text-slate-200 z-50 animate-in fade-in"
                   onClick={() => setMobileMenuOpen(false)}
                 >
+                  {onOpenStudio && (
+                    <button
+                      type="button"
+                      onClick={onOpenStudio}
+                      className="w-full text-left px-3 py-2 hover:bg-slate-800 flex items-center justify-between text-indigo-300 font-semibold"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Printer className="w-3.5 h-3.5 text-indigo-400" />
+                        <span>Estúdio de Cartas</span>
+                      </span>
+                      {selectedCount > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-[10px] font-bold">
+                          {selectedCount}
+                        </span>
+                      )}
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={onOpenManageEntities}

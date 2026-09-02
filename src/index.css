@@ -1,1 +1,137 @@
 @import "tailwindcss";
+
+@layer utilities {
+  /* Impressão fiel de cartas de magias */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 8mm;
+    }
+
+    body {
+      background: white !important;
+      color: black !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Ocultar tudo que não for a área de impressão de cartas */
+    header,
+    nav,
+    aside,
+    #main-navbar,
+    #btn-toggle-filters-mobile,
+    #btn-open-selection-deck-floating,
+    .toast-container,
+    .no-print {
+      display: none !important;
+    }
+
+    #spell-selection-studio-backdrop {
+      position: static !important;
+      background: transparent !important;
+      padding: 0 !important;
+      backdrop-filter: none !important;
+      overflow: visible !important;
+      display: block !important;
+      z-index: auto !important;
+    }
+
+    #spell-selection-studio-modal {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      max-width: 100% !important;
+      height: auto !important;
+      overflow: visible !important;
+      display: block !important;
+    }
+
+    #spell-selection-studio-modal > div:first-child,
+    #spell-selection-studio-modal > div:nth-child(2),
+    #spell-selection-studio-modal > div:last-child {
+      display: none !important;
+    }
+
+    #printable-deck-area {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: flex-start !important;
+      justify-content: flex-start !important;
+      gap: 5mm !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+      overflow: visible !important;
+    }
+
+    #printable-deck-area > div {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      margin-bottom: 5mm !important;
+    }
+
+    #printable-deck-area > div > div:first-child {
+      display: none !important; /* Esconder barra de controle do topo da carta */
+    }
+
+    #printable-deck-area > div > div:last-child {
+      transform: none !important;
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+/* Custom Scrollbar for Card Body */
+.spell-card-markdown {
+  font-family: inherit;
+  word-break: break-word;
+}
+
+.spell-card-markdown p {
+  margin-bottom: 0.35rem;
+}
+
+.spell-card-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.spell-card-markdown ul,
+.spell-card-markdown ol {
+  margin-top: 0.2rem;
+  margin-bottom: 0.3rem;
+  padding-left: 1rem;
+}
+
+.spell-card-markdown li {
+  margin-bottom: 0.15rem;
+}
+
+.spell-card-markdown h1,
+.spell-card-markdown h2,
+.spell-card-markdown h3,
+.spell-card-markdown h4 {
+  font-weight: 800;
+  margin-top: 0.35rem;
+  margin-bottom: 0.15rem;
+}
+
+.spell-card-markdown strong {
+  font-weight: 700;
+}
+
+.spell-card-markdown table {
+  width: 100%;
+  margin: 0.3rem 0;
+  font-size: 8px;
+  border-collapse: collapse;
+}
+
+.spell-card-markdown th,
+.spell-card-markdown td {
+  padding: 2px 4px;
+  border: 1px solid rgba(150, 150, 150, 0.25);
+}
+
