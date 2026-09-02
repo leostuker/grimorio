@@ -146,7 +146,7 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
         id={`print-card-${magia.id_magia}`}
         className={`relative box-border shrink-0 flex flex-col justify-between select-text transition-all ${
           st.container
-        } ${showCutGuides ? 'outline-1 outline-dashed outline-indigo-500/30' : ''}`}
+        }`}
         style={{
           width: isWide ? '178mm' : '89mm',
           height: '140mm',
@@ -158,10 +158,31 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
           boxSizing: 'border-box',
           pageBreakInside: 'avoid',
           breakInside: 'avoid',
-          overflow: 'hidden',
+          overflow: 'visible',
           borderRadius: '3mm',
         }}
       >
+        {/* Guias/Marcas de corte nos 4 cantos para corte perfeito com régua ou guilhotina */}
+        {showCutGuides && (
+          <div className="crop-marks-layer pointer-events-none">
+            {/* Canto Superior Esquerdo */}
+            <div className="absolute -top-[3.5mm] left-0 w-[0.75px] h-[3.5mm] bg-slate-500 print:bg-black" />
+            <div className="absolute top-0 -left-[3.5mm] h-[0.75px] w-[3.5mm] bg-slate-500 print:bg-black" />
+
+            {/* Canto Superior Direito */}
+            <div className="absolute -top-[3.5mm] right-0 w-[0.75px] h-[3.5mm] bg-slate-500 print:bg-black" />
+            <div className="absolute top-0 -right-[3.5mm] h-[0.75px] w-[3.5mm] bg-slate-500 print:bg-black" />
+
+            {/* Canto Inferior Esquerdo */}
+            <div className="absolute -bottom-[3.5mm] left-0 w-[0.75px] h-[3.5mm] bg-slate-500 print:bg-black" />
+            <div className="absolute bottom-0 -left-[3.5mm] h-[0.75px] w-[3.5mm] bg-slate-500 print:bg-black" />
+
+            {/* Canto Inferior Direito */}
+            <div className="absolute -bottom-[3.5mm] right-0 w-[0.75px] h-[3.5mm] bg-slate-500 print:bg-black" />
+            <div className="absolute bottom-0 -right-[3.5mm] h-[0.75px] w-[3.5mm] bg-slate-500 print:bg-black" />
+          </div>
+        )}
+
         {/* Inner Ornate Frame Container */}
         <div
           className={`w-full h-full rounded-[2.2mm] border flex flex-col justify-between p-[2.2mm] box-border overflow-hidden relative ${st.innerFrame}`}

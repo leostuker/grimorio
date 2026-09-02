@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
   X,
   Printer,
@@ -122,6 +122,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
           transform: 'none',
           outline: 'none',
         },
+        filter: (node) => !(node instanceof HTMLElement && node.classList?.contains('crop-marks-layer')),
       });
 
       const link = document.createElement('a');
@@ -176,6 +177,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
               transform: 'none',
               outline: 'none',
             },
+            filter: (node) => !(node instanceof HTMLElement && node.classList?.contains('crop-marks-layer')),
           });
 
           // Converte Base64 para binário
@@ -198,6 +200,36 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
       setExportProgress(null);
     }
   };
+
+  // Agrupamento de cartas em folhas A4:
+  // Cada folha comporta até 4 slots (Padrão = 1 slot, Ampla = 2 slots)
+  const sheets = useMemo(() => {
+    const pages: MagiaCompleta[][] = [];
+    let current: MagiaCompleta[] = [];
+    let currentSlots = 0;
+
+    for (const spell of selectedSpells) {
+      const isWide = getFormatForSpell(spell) === 'wide';
+      const slots = isWide ? 2 : 1;
+
+      if (currentSlots + slots > 4) {
+        if (current.length > 0) {
+          pages.push(current);
+        }
+        current = [spell];
+        currentSlots = slots;
+      } else {
+        current.push(spell);
+        currentSlots += slots;
+      }
+    }
+
+    if (current.length > 0) {
+      pages.push(current);
+    }
+
+    return pages;
+  }, [selectedSpells, customFormats, getFormatForSpell]);
 
   if (!isOpen) return null;
 
@@ -449,7 +481,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
         )}
 
         {/* MAIN BODY: PREVIEW OF CARDS */}
-        <div className="flex-1 min-h-0 p-4 sm:p-6 overflow-y-auto bg-slate-900/40">
+        <div className="studio-body-wrapper flex-1 min-h-0 p-4 sm:p-6 overflow-y-auto bg-slate-900/40">
           {selectedSpells.length === 0 ? (
             <div className="py-24 text-center max-w-md mx-auto">
               <div className="w-16 h-16 mx-auto mb-4 p-3 rounded-2xl bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center">
@@ -472,96 +504,121 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
           ) : (
             <div
               id="printable-deck-area"
-              className="flex flex-wrap items-start justify-center gap-6 sm:gap-8 pb-12"
+              className="w-full flex flex-col items-center gap-10 pb-12"
             >
-              {selectedSpells.map((magia) => {
-                const format = getFormatForSpell(magia);
-                const isWide = format === 'wide';
-                const isSingleExporting = exportingSingleId === magia.id_magia;
-
-                return (
-                  <div
-                    key={magia.id_magia}
-                    className="printable-card-wrapper flex flex-col items-center gap-2 group/card"
-                    data-wide={isWide ? 'true' : 'false'}
-                  >
-                    {/* Top Card Controls (Switch format, export single png, remove) */}
-                    <div className="card-action-bar no-print w-full flex items-center justify-between gap-1.5 px-1 py-1 bg-slate-900/90 rounded border border-slate-800 text-[11px] text-slate-300">
-                      {/* Format toggle pill */}
-                      <button
-                        type="button"
-                        onClick={() => toggleSpellFormat(magia.id_magia)}
-                        className={`px-2 py-0.5 rounded font-mono text-[10px] font-semibold border transition-all ${
-                          isWide
-                            ? 'bg-violet-950/80 border-violet-500/50 text-violet-300'
-                            : 'bg-indigo-950/80 border-indigo-500/50 text-indigo-300'
-                        }`}
-                        title="Alternar entre formato padrão (89x140mm) e amplo (178x140mm)"
-                      >
-                        {isWide ? 'Ampla (178×140mm)' : 'Padrão (89×140mm)'}
-                      </button>
-
-                      <div className="flex items-center gap-1">
-                        {/* Download Single PNG */}
-                        <button
-                          type="button"
-                          onClick={() => handleExportSinglePng(magia)}
-                          disabled={isSingleExporting}
-                          className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-indigo-300 transition-colors"
-                          title="Baixar imagem PNG desta carta"
-                        >
-                          {isSingleExporting ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-400" />
-                          ) : (
-                            <FileImage className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-
-                        {/* Remove from selection */}
-                        <button
-                          type="button"
-                          onClick={() => onRemoveSpell(magia.id_magia)}
-                          className="p-1 rounded bg-slate-800 hover:bg-rose-950/70 text-slate-400 hover:text-rose-400 transition-colors"
-                          title="Remover carta do deck"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Scaled Card Frame Preview */}
-                    <div
-                      style={{
-                        transform: `scale(${zoomLevel})`,
-                        transformOrigin: 'top center',
-                        marginBottom: `${(1 - zoomLevel) * -140 * 3.78}px`, // Compensar espaço vertical do CSS transform
-                      }}
-                      className="card-zoom-container transition-transform duration-100"
-                    >
-                      <PrintableSpellCard
-                        ref={(el) => {
-                          if (el) {
-                            cardRefs.current[magia.id_magia] = el;
-                          } else {
-                            delete cardRefs.current[magia.id_magia];
-                          }
-                        }}
-                        magia={magia}
-                        format={format}
-                        theme={theme}
-                        showCutGuides={showCutGuides}
-                      />
-                    </div>
+              {sheets.map((sheet, sheetIdx) => (
+                <div
+                  key={`sheet-group-${sheetIdx}`}
+                  className="print-sheet-wrapper w-full flex flex-col items-center"
+                >
+                  {/* Visual Sheet Divider (Hidden on Print) */}
+                  <div className="no-print w-full max-w-[1200px] flex items-center justify-between gap-2 px-3 py-1.5 mb-4 bg-slate-900/80 border border-slate-800 rounded text-xs text-slate-400">
+                    <span className="font-bold text-slate-200 flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-indigo-900/60 text-indigo-300 font-mono text-[11px] border border-indigo-700/50">
+                        Folha A4 #{sheetIdx + 1}
+                      </span>
+                      <span>
+                        ({sheet.length} {sheet.length === 1 ? 'carta' : 'cartas'})
+                      </span>
+                    </span>
+                    <span className="text-[11px] text-slate-500 hidden sm:inline">
+                      Grid 2×2 otimizado para corte com régua ou guilhotina
+                    </span>
                   </div>
-                );
-              })}
+
+                  {/* 2x2 Sheet Grid for Print and Screen */}
+                  <div className="print-sheet">
+                    {sheet.map((magia) => {
+                      const format = getFormatForSpell(magia);
+                      const isWide = format === 'wide';
+                      const isSingleExporting = exportingSingleId === magia.id_magia;
+
+                      return (
+                        <div
+                          key={magia.id_magia}
+                          className="printable-card-wrapper flex flex-col items-center gap-2 group/card"
+                          data-wide={isWide ? 'true' : 'false'}
+                        >
+                          {/* Top Card Controls (Switch format, export single png, remove) */}
+                          <div className="card-action-bar no-print w-full flex items-center justify-between gap-1.5 px-1 py-1 bg-slate-900/90 rounded border border-slate-800 text-[11px] text-slate-300">
+                            {/* Format toggle pill */}
+                            <button
+                              type="button"
+                              onClick={() => toggleSpellFormat(magia.id_magia)}
+                              className={`px-2 py-0.5 rounded font-mono text-[10px] font-semibold border transition-all ${
+                                isWide
+                                  ? 'bg-violet-950/80 border-violet-500/50 text-violet-300'
+                                  : 'bg-indigo-950/80 border-indigo-500/50 text-indigo-300'
+                              }`}
+                              title="Alternar entre formato padrão (89x140mm) e amplo (178x140mm)"
+                            >
+                              {isWide ? 'Ampla (178×140mm)' : 'Padrão (89×140mm)'}
+                            </button>
+
+                            <div className="flex items-center gap-1">
+                              {/* Download Single PNG */}
+                              <button
+                                type="button"
+                                onClick={() => handleExportSinglePng(magia)}
+                                disabled={isSingleExporting}
+                                className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-indigo-300 transition-colors"
+                                title="Baixar imagem PNG desta carta"
+                              >
+                                {isSingleExporting ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+                                ) : (
+                                  <FileImage className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+
+                              {/* Remove from selection */}
+                              <button
+                                type="button"
+                                onClick={() => onRemoveSpell(magia.id_magia)}
+                                className="p-1 rounded bg-slate-800 hover:bg-rose-950/70 text-slate-400 hover:text-rose-400 transition-colors"
+                                title="Remover carta do deck"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Scaled Card Frame Preview */}
+                          <div
+                            style={{
+                              transform: `scale(${zoomLevel})`,
+                              transformOrigin: 'top center',
+                              marginBottom: `${(1 - zoomLevel) * -140 * 3.78}px`, // Compensar espaço vertical do CSS transform
+                            }}
+                            className="card-zoom-container transition-transform duration-100"
+                          >
+                            <PrintableSpellCard
+                              ref={(el) => {
+                                if (el) {
+                                  cardRefs.current[magia.id_magia] = el;
+                                } else {
+                                  delete cardRefs.current[magia.id_magia];
+                                }
+                              }}
+                              magia={magia}
+                              format={format}
+                              theme={theme}
+                              showCutGuides={showCutGuides}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
         {/* MODAL FOOTER INFO */}
         <div className="studio-footer no-print p-3 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="font-semibold text-slate-300">Resumo de Impressão:</span>
             <span>
               {selectedSpells.filter((s) => getFormatForSpell(s) === 'standard').length} cartas Padrão (89×140mm)
@@ -570,11 +627,15 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
             <span>
               {selectedSpells.filter((s) => getFormatForSpell(s) === 'wide').length} cartas Longas/Amplas (178×140mm)
             </span>
+            <span>•</span>
+            <span className="font-bold text-indigo-400">
+              {sheets.length} {sheets.length === 1 ? 'folha A4' : 'folhas A4'}
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-slate-500">
-              Dica: Na janela de impressão, ative &ldquo;Gráficos de segundo plano&rdquo; para cores perfeitas.
+              Dica: Na janela de impressão, selecione &ldquo;Salvar como PDF&rdquo; ou impressora e ative &ldquo;Gráficos de segundo plano&rdquo;.
             </span>
           </div>
         </div>
