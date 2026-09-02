@@ -377,7 +377,7 @@ export default function App() {
   }, [filtros, metadata]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div id="app-root-container" className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       
       {/* Top Navbar with integrated compact DB status */}
       <Navbar
@@ -395,7 +395,7 @@ export default function App() {
       />
 
       {/* Main Layout: Left Sidebar + Content Area */}
-      <div className="flex-1 flex max-w-[1440px] w-full mx-auto">
+      <div id="app-main-layout" className="flex-1 flex max-w-[1440px] w-full mx-auto">
         
         {/* Left Filter Sidebar (Sticky, Collapsible on Desktop, Slide-over on Mobile) */}
         <FilterSidebar

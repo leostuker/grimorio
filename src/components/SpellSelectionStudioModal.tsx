@@ -46,8 +46,8 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
   onRemoveSpell,
   onClearAll,
 }) => {
-  // Configurações Globais do Estúdio
-  const [theme, setTheme] = useState<CardTheme>('dark');
+  // Configurações Globais do Estúdio (padrão Claro para máxima legibilidade e economia de tinta)
+  const [theme, setTheme] = useState<CardTheme>('clean');
   const [showCutGuides, setShowCutGuides] = useState(true);
   const [zoomLevel, setZoomLevel] = useState<number>(0.85); // Escala de visualização no preview
   
@@ -211,7 +211,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
         className="w-full max-w-[1500px] h-[95vh] bg-slate-950 border border-slate-800 rounded-lg shadow-2xl flex flex-col overflow-hidden text-slate-100"
       >
         {/* MODAL TOP HEADER */}
-        <div className="p-3 sm:p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0">
+        <div className="studio-header no-print p-3 sm:p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="p-2 rounded-lg bg-indigo-950/70 border border-indigo-500/40 text-indigo-400">
               <GrimoireIcon className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -278,7 +278,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
         </div>
 
         {/* TOOLBAR CONTROLS */}
-        <div className="p-2.5 sm:p-3 bg-slate-900/70 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+        <div className="studio-toolbar no-print p-2.5 sm:p-3 bg-slate-900/70 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
           {/* Left: Themes & Formats */}
           <div className="flex flex-wrap items-center gap-2">
             
@@ -482,10 +482,11 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                 return (
                   <div
                     key={magia.id_magia}
-                    className="flex flex-col items-center gap-2 group/card"
+                    className="printable-card-wrapper flex flex-col items-center gap-2 group/card"
+                    data-wide={isWide ? 'true' : 'false'}
                   >
                     {/* Top Card Controls (Switch format, export single png, remove) */}
-                    <div className="w-full flex items-center justify-between gap-1.5 px-1 py-1 bg-slate-900/90 rounded border border-slate-800 text-[11px] text-slate-300">
+                    <div className="card-action-bar no-print w-full flex items-center justify-between gap-1.5 px-1 py-1 bg-slate-900/90 rounded border border-slate-800 text-[11px] text-slate-300">
                       {/* Format toggle pill */}
                       <button
                         type="button"
@@ -535,7 +536,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                         transformOrigin: 'top center',
                         marginBottom: `${(1 - zoomLevel) * -146 * 3.78}px`, // Compensar espaço vertical do CSS transform
                       }}
-                      className="transition-transform duration-100"
+                      className="card-zoom-container transition-transform duration-100"
                     >
                       <PrintableSpellCard
                         ref={(el) => {
@@ -559,7 +560,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
         </div>
 
         {/* MODAL FOOTER INFO */}
-        <div className="p-3 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
+        <div className="studio-footer no-print p-3 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-300">Resumo de Impressão:</span>
             <span>

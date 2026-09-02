@@ -1,86 +1,111 @@
 @import "tailwindcss";
 
-@layer utilities {
-  /* Impressão fiel de cartas de magias */
-  @media print {
-    @page {
-      size: A4 portrait;
-      margin: 8mm;
-    }
+/* Impressão fiel e isolada de cartas de magias */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 6mm 6mm 6mm 6mm;
+  }
 
-    body {
-      background: white !important;
-      color: black !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-    /* Ocultar tudo que não for a área de impressão de cartas */
-    header,
-    nav,
-    aside,
-    #main-navbar,
-    #btn-toggle-filters-mobile,
-    #btn-open-selection-deck-floating,
-    .toast-container,
-    .no-print {
-      display: none !important;
-    }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
 
-    #spell-selection-studio-backdrop {
-      position: static !important;
-      background: transparent !important;
-      padding: 0 !important;
-      backdrop-filter: none !important;
-      overflow: visible !important;
-      display: block !important;
-      z-index: auto !important;
-    }
+  /* Ocultar completamente a página de trás do aplicativo */
+  #app-root-container > header,
+  #app-root-container > div#app-main-layout,
+  #app-root-container > div#btn-open-selection-deck-floating,
+  #main-navbar,
+  header,
+  nav,
+  aside,
+  main,
+  #btn-toggle-filters-mobile,
+  #btn-open-selection-deck-floating,
+  .toast-container,
+  .no-print {
+    display: none !important;
+  }
 
-    #spell-selection-studio-modal {
-      border: none !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      max-width: 100% !important;
-      height: auto !important;
-      overflow: visible !important;
-      display: block !important;
-    }
+  /* Desativar o fundo escuro do modal e transformá-lo em folha limpa */
+  #spell-selection-studio-backdrop {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    z-index: auto !important;
+  }
 
-    #spell-selection-studio-modal > div:first-child,
-    #spell-selection-studio-modal > div:nth-child(2),
-    #spell-selection-studio-modal > div:last-child {
-      display: none !important;
-    }
+  #spell-selection-studio-modal {
+    position: static !important;
+    inset: auto !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 
-    #printable-deck-area {
-      display: flex !important;
-      flex-wrap: wrap !important;
-      align-items: flex-start !important;
-      justify-content: flex-start !important;
-      gap: 5mm !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      background: transparent !important;
-      overflow: visible !important;
-    }
+  .studio-header,
+  .studio-toolbar,
+  .studio-footer,
+  .card-action-bar {
+    display: none !important;
+  }
 
-    #printable-deck-area > div {
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-      margin-bottom: 5mm !important;
-    }
+  /* Container das cartas selecionadas */
+  #printable-deck-area {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 4mm 4mm !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
 
-    #printable-deck-area > div > div:first-child {
-      display: none !important; /* Esconder barra de controle do topo da carta */
-    }
+  .printable-card-wrapper {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+  }
 
-    #printable-deck-area > div > div:last-child {
-      transform: none !important;
-      margin-bottom: 0 !important;
-    }
+  .card-zoom-container {
+    transform: none !important;
+    margin-bottom: 0 !important;
   }
 }
 
