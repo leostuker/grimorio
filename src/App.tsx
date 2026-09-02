@@ -15,11 +15,6 @@ import {
   Layers,
   Upload,
   RotateCcw,
-  Printer,
-  CheckSquare,
-  Square,
-  Image as ImageIcon,
-  Check,
 } from 'lucide-react';
 import {
   MagiaCompleta,
@@ -47,7 +42,6 @@ import { ManageEntitiesModal } from './components/ManageEntitiesModal';
 import { SchemaDocModal } from './components/SchemaDocModal';
 import { SecurityPinModal } from './components/SecurityPinModal';
 import { DbConnectionModal } from './components/DbConnectionModal';
-import { PrintAndExportModal } from './components/PrintAndExportModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import { GrimoireIcon } from './components/GrimoireIcon';
 import { formatCirculo, getEscolaColor } from './utils/magicHelpers';
@@ -58,10 +52,6 @@ export default function App() {
   const [magias, setMagias] = useState<MagiaCompleta[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-
-  // Seleção Múltipla de Magias para Impressão e Exportação
-  const [selectedSpellIds, setSelectedSpellIds] = useState<Set<number>>(new Set());
-  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   // Filtros
   const [filtros, setFiltros] = useState<FiltrosMagia>({
@@ -204,61 +194,6 @@ export default function App() {
   const handleExportCSV = () => {
     window.open('/api/magias/export-csv', '_blank');
   };
-
-  // Métodos de Seleção de Magias
-  const toggleSelectSpell = (magia: MagiaCompleta) => {
-    setSelectedSpellIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(magia.id_magia)) {
-        next.delete(magia.id_magia);
-      } else {
-        next.add(magia.id_magia);
-      }
-      return next;
-    });
-  };
-
-  const handleSelectAllVisible = () => {
-    setSelectedSpellIds((prev) => {
-      const next = new Set(prev);
-      magias.forEach((m) => next.add(m.id_magia));
-      return next;
-    });
-  };
-
-  const handleDeselectAllVisible = () => {
-    setSelectedSpellIds((prev) => {
-      const next = new Set(prev);
-      magias.forEach((m) => next.delete(m.id_magia));
-      return next;
-    });
-  };
-
-  const handleClearAllSelection = () => {
-    setSelectedSpellIds(new Set());
-  };
-
-  const handleDeselectSingleSpell = (id: number) => {
-    setSelectedSpellIds((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
-  };
-
-  // Lista de Magias Selecionadas para o Modal de Impressão e Exportação
-  const selectedSpellsList = useMemo(() => {
-    return magias.filter((m) => selectedSpellIds.has(m.id_magia));
-  }, [magias, selectedSpellIds]);
-
-  const allVisibleSelected = useMemo(() => {
-    if (magias.length === 0) return false;
-    return magias.every((m) => selectedSpellIds.has(m.id_magia));
-  }, [magias, selectedSpellIds]);
-
-  const someVisibleSelected = useMemo(() => {
-    return magias.some((m) => selectedSpellIds.has(m.id_magia));
-  }, [magias, selectedSpellIds]);
 
   const resetAllFilters = () => {
     setFiltros({
@@ -436,8 +371,8 @@ export default function App() {
             {/* Main Controls Row */}
             <div className="flex flex-wrap items-center justify-between gap-2">
               
-              {/* Left: Mobile Filter Button, Selection Controls & Magias Count */}
-              <div className="flex flex-wrap items-center gap-2">
+              {/* Left: Mobile Filter Button & Magias Count */}
+              <div className="flex items-center gap-2">
                 {/* Filter toggle button for mobile/tablet screens */}
                 <button
                   id="btn-toggle-filters-mobile"
@@ -457,39 +392,6 @@ export default function App() {
                     </span>
                   )}
                 </button>
-
-                {/* Seleção Rápida de Magias */}
-                {magias.length > 0 && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      id="btn-select-all-visible"
-                      type="button"
-                      onClick={allVisibleSelected ? handleDeselectAllVisible : handleSelectAllVisible}
-                      className="px-2 py-1.5 rounded bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white border border-slate-800 text-xs font-medium flex items-center gap-1.5 transition-colors"
-                      title={allVisibleSelected ? "Desmarcar visíveis" : "Selecionar todas as magias visíveis"}
-                    >
-                      {allVisibleSelected ? (
-                        <CheckSquare className="w-3.5 h-3.5 text-indigo-400" />
-                      ) : (
-                        <Square className="w-3.5 h-3.5 text-slate-400" />
-                      )}
-                      <span>{allVisibleSelected ? 'Desmarcar Todas' : 'Selecionar Todas'}</span>
-                    </button>
-
-                    {selectedSpellIds.size > 0 && (
-                      <button
-                        id="btn-open-print-modal-top"
-                        type="button"
-                        onClick={() => setIsPrintModalOpen(true)}
-                        className="px-2.5 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm shadow-indigo-600/30 transition-all active:scale-95"
-                        title="Abrir Modo de Impressão e Gerador de Imagens"
-                      >
-                        <Printer className="w-3.5 h-3.5" />
-                        <span>Imprimir / Cards ({selectedSpellIds.size})</span>
-                      </button>
-                    )}
-                  </div>
-                )}
 
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <span className="font-bold text-slate-200">
@@ -654,8 +556,6 @@ export default function App() {
               <SpellCard
                 key={magia.id_magia}
                 magia={magia}
-                isSelected={selectedSpellIds.has(magia.id_magia)}
-                onToggleSelect={toggleSelectSpell}
                 onView={setSelectedSpellForView}
                 onEdit={handleOpenEditSpell}
                 onDelete={handleDeleteSpell}
@@ -663,7 +563,7 @@ export default function App() {
             ))}
           </div>
         ) : (
-          /* Table View with Row Selection */
+          /* Table View */
           <div
             id="table-spells-container"
             className="overflow-x-auto rounded-lg border border-slate-800 bg-slate-900/80 shadow-lg"
@@ -671,20 +571,6 @@ export default function App() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/80 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-3 w-10 text-center">
-                    <button
-                      type="button"
-                      onClick={allVisibleSelected ? handleDeselectAllVisible : handleSelectAllVisible}
-                      className="p-1 rounded text-slate-400 hover:text-white"
-                      title={allVisibleSelected ? 'Desmarcar todas' : 'Selecionar todas'}
-                    >
-                      {allVisibleSelected ? (
-                        <CheckSquare className="w-4 h-4 text-indigo-400" />
-                      ) : (
-                        <Square className="w-4 h-4 text-slate-500 hover:text-slate-300" />
-                      )}
-                    </button>
-                  </th>
                   <th className="py-3 px-3 sm:px-4">Nome & Círculo</th>
                   <th className="py-3 px-3 sm:px-4">Escola</th>
                   <th className="py-3 px-3 sm:px-4 hidden md:table-cell">Tempo</th>
@@ -697,34 +583,13 @@ export default function App() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {magias.map((m) => {
-                  const isSelected = selectedSpellIds.has(m.id_magia);
                   const escolaColors = getEscolaColor(m.escola);
                   return (
                     <tr
                       key={m.id_magia}
-                      className={`hover:bg-slate-850/80 transition-colors group cursor-pointer ${
-                        isSelected ? 'bg-indigo-950/25' : ''
-                      }`}
+                      className="hover:bg-slate-850/80 transition-colors group cursor-pointer"
                       onClick={() => setSelectedSpellForView(m)}
                     >
-                      <td
-                        className="py-2.5 px-3 text-center"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleSelectSpell(m);
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className="p-1 rounded text-slate-400 hover:text-indigo-400"
-                        >
-                          {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-indigo-400" />
-                          ) : (
-                            <Square className="w-4 h-4 text-slate-600 hover:text-slate-400" />
-                          )}
-                        </button>
-                      </td>
                       <td className="py-2.5 px-3 sm:px-4">
                         <div className="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">
                           {m.nome_magia}
@@ -806,54 +671,8 @@ export default function App() {
         </main>
       </div>
 
-      {/* Floating Action Bar quando houver magias selecionadas */}
-      {selectedSpellIds.size > 0 && (
-        <div
-          id="floating-selection-bar"
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 border border-indigo-500/50 backdrop-blur-md px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-3.5 text-xs animate-in slide-in-from-bottom-5 duration-200"
-        >
-          <div className="flex items-center gap-2 text-slate-200 font-semibold">
-            <span className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[11px] font-bold">
-              {selectedSpellIds.size}
-            </span>
-            <span>{selectedSpellIds.size === 1 ? 'magia selecionada' : 'magias selecionadas'}</span>
-          </div>
-
-          <div className="h-4 w-px bg-slate-700" />
-
-          {/* Botão para abrir o modo de impressão e exportação */}
-          <button
-            id="btn-open-print-floating"
-            type="button"
-            onClick={() => setIsPrintModalOpen(true)}
-            className="px-3.5 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1.5 shadow-md transition-all active:scale-95"
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span>Imprimir & Gerar Cards (PNG)</span>
-          </button>
-
-          {/* Botão para limpar a seleção */}
-          <button
-            type="button"
-            onClick={handleClearAllSelection}
-            className="text-slate-400 hover:text-slate-200 hover:underline px-1"
-          >
-            Desmarcar
-          </button>
-        </div>
-      )}
-
       {/* Modais do Sistema */}
       
-      {/* 0. Modal de Impressão e Exportação de Cards em Imagem */}
-      <PrintAndExportModal
-        isOpen={isPrintModalOpen}
-        onClose={() => setIsPrintModalOpen(false)}
-        selectedSpells={selectedSpellsList}
-        onDeselectSpell={handleDeselectSingleSpell}
-        onClearSelection={handleClearAllSelection}
-      />
-
       {/* 1. Modal de Detalhes da Magia */}
       <SpellDetailModal
         magia={selectedSpellForView}
@@ -862,10 +681,6 @@ export default function App() {
         onEdit={handleOpenEditSpell}
         onDelete={handleDeleteSpell}
         onDuplicate={handleOpenDuplicateSpell}
-        onPrintSingle={(m) => {
-          setSelectedSpellIds(new Set([m.id_magia]));
-          setIsPrintModalOpen(true);
-        }}
       />
 
       {/* 2. Modal de Formulário (Criar/Editar) */}
