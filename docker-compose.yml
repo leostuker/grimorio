@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=3004
       - DB_HOST=192.168.0.153
       - DB_PORT=6532
       - DB_USER=leo
