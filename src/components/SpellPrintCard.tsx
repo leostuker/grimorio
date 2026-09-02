@@ -3,19 +3,12 @@ import {
   Clock,
   Compass,
   Hourglass,
-  Shield,
   Layers,
-  Crosshair,
-  Sparkles,
-  BookOpen,
 } from 'lucide-react';
 import { MagiaCompleta } from '../types';
 import {
   formatCirculo,
-  getEscolaColor,
-  getTipoDanoBadgeClass,
   formatDanoFormula,
-  stripMarkdown,
 } from '../utils/magicHelpers';
 import ReactMarkdown from 'react-markdown';
 
@@ -26,6 +19,7 @@ interface SpellPrintCardProps {
   magia: MagiaCompleta;
   theme?: PrintTheme;
   cardSize?: CardSize;
+  isWide?: boolean;
   id?: string;
   className?: string;
 }
@@ -34,6 +28,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
   magia,
   theme = 'parchment',
   cardSize = 'card_standard',
+  isWide = false,
   id,
   className = '',
 }) => {
@@ -46,19 +41,19 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
   // Esquemas de cores conforme o tema escolhido
   const themeStyles = {
     parchment: {
-      wrapper: 'bg-[#fcf8ee] text-stone-900 border-[#8a6d3b] shadow-sm',
-      headerBg: 'bg-[#ede3cc] border-b border-[#8a6d3b]/50',
+      wrapper: 'bg-[#fcf8ee] text-[#2c1d11] border-[#8a6d3b] shadow-xs print:shadow-none print:border-[#8a6d3b]',
+      headerBg: 'bg-[#ede3cc] border-b border-[#8a6d3b]/60',
       title: 'text-[#4a1c1a]',
-      subtitle: 'text-[#704214]',
+      subtitle: 'text-[#6b3f17]',
       subBox: 'bg-[#f4ebd0] border-[#d8c7a1]',
-      badgePill: 'bg-[#ede0c4] text-[#5c3c10] border-[#cbb78d]',
-      bodyText: 'text-stone-800',
+      badgePill: 'bg-[#ede0c4] text-[#4a2e0e] border-[#cbb78d]',
+      bodyText: 'text-[#2a1d15]',
       divider: 'border-[#cbb78d]',
-      footerBg: 'bg-[#f4ebd0] border-t border-[#8a6d3b]/40 text-stone-700',
+      footerBg: 'bg-[#f4ebd0] border-t border-[#8a6d3b]/40 text-[#4a3424]',
       iconColor: 'text-[#8a4e1d]',
     },
     eco_white: {
-      wrapper: 'bg-white text-black border-stone-800 shadow-none',
+      wrapper: 'bg-white text-black border-stone-800 shadow-none print:border-black',
       headerBg: 'bg-stone-100 border-b border-stone-800',
       title: 'text-black',
       subtitle: 'text-stone-700',
@@ -83,17 +78,10 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
     },
   }[theme];
 
-  // Configuração dimensional baseada no formato
-  const sizeStyles = {
-    card_standard: 'w-[320px] min-h-[440px] text-xs p-3.5',
-    card_medium: 'w-[420px] min-h-[520px] text-sm p-4',
-    grimoire_sheet: 'w-full min-h-[220px] text-xs p-4 mb-4',
-  }[cardSize];
-
   return (
     <div
       id={id || `print-card-${magia.id_magia}`}
-      className={`relative rounded-lg border-2 flex flex-col justify-between overflow-hidden font-sans print:break-inside-avoid ${themeStyles.wrapper} ${sizeStyles} ${className}`}
+      className={`relative rounded-lg border-2 flex flex-col justify-between overflow-hidden font-sans print-card-break print:break-inside-avoid print:page-break-inside-avoid ${themeStyles.wrapper} p-3.5 sm:p-4 text-xs ${className}`}
       style={{ boxSizing: 'border-box' }}
     >
       {/* Top Header */}
@@ -101,7 +89,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
         <div className="flex items-start justify-between gap-2 pb-2 border-b border-current/20">
           <div className="flex-1 min-w-0">
             <h3
-              className={`font-black text-base leading-tight tracking-tight uppercase ${themeStyles.title}`}
+              className={`font-black text-sm sm:text-base leading-tight tracking-tight uppercase ${themeStyles.title}`}
               style={{ fontFamily: 'Cinzel, Georgia, serif' }}
             >
               {magia.nome_magia}
@@ -119,7 +107,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
 
         {/* Metadados Essenciais de Conjuração em Grade */}
         <div
-          className={`grid grid-cols-2 gap-1.5 p-2 my-2 rounded border text-[10px] font-medium leading-tight ${themeStyles.subBox}`}
+          className={`grid ${isWide ? 'grid-cols-4' : 'grid-cols-2'} gap-1.5 p-2 my-2 rounded border text-[10px] font-medium leading-tight ${themeStyles.subBox}`}
         >
           <div className="flex items-center gap-1 truncate">
             <Clock className={`w-3 h-3 shrink-0 ${themeStyles.iconColor}`} />
@@ -162,7 +150,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
         <div className="flex flex-wrap gap-1 mb-2">
           {magia.concentracao && (
             <span
-              className={`px-1.5 py-0.2 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
             >
               Concentração
             </span>
@@ -170,7 +158,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
 
           {magia.salvaguarda && (
             <span
-              className={`px-1.5 py-0.2 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
             >
               Salvaguarda: {magia.atributo_salvaguarda || 'Sim'}
             </span>
@@ -178,7 +166,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
 
           {magia.ataque && (
             <span
-              className={`px-1.5 py-0.2 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${themeStyles.badgePill}`}
             >
               Ataque Mágico
             </span>
@@ -186,7 +174,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
 
           {danoFormula && (
             <span
-              className={`px-1.5 py-0.2 rounded text-[9px] font-bold font-mono border ${themeStyles.badgePill}`}
+              className={`px-1.5 py-0.5 rounded text-[9px] font-bold font-mono border ${themeStyles.badgePill}`}
             >
               Dano: {danoFormula}
             </span>
@@ -196,7 +184,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
             magia.tipos_dano.map((td) => (
               <span
                 key={td}
-                className={`px-1.5 py-0.2 rounded text-[9px] font-semibold border ${themeStyles.badgePill}`}
+                className={`px-1.5 py-0.5 rounded text-[9px] font-semibold border ${themeStyles.badgePill}`}
               >
                 {td}
               </span>
@@ -205,16 +193,84 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
 
         {/* Detalhes do Componente Material se houver */}
         {magia.componente_material && magia.descricao_material && (
-          <div className="text-[10px] italic mb-1.5 opacity-85 leading-snug">
+          <div className="text-[10px] italic mb-2 opacity-90 leading-snug">
             <strong>Material:</strong> {magia.descricao_material}
           </div>
         )}
 
-        {/* Descrição Formatada */}
+        {/* Descrição com suporte Completo a Markdown */}
         <div
-          className={`text-[11px] leading-relaxed line-clamp-8 ${themeStyles.bodyText}`}
+          className={`spell-card-markdown text-[11px] leading-relaxed my-1.5 ${themeStyles.bodyText}`}
         >
-          <p className="whitespace-pre-line">{stripMarkdown(magia.descricao)}</p>
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => (
+                <p className="mb-1.5 last:mb-0 leading-relaxed">{children}</p>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-bold text-inherit">{children}</strong>
+              ),
+              em: ({ children }) => (
+                <em className="italic text-inherit">{children}</em>
+              ),
+              ul: ({ children }) => (
+                <ul className="list-disc pl-3.5 mb-1.5 space-y-0.5">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal pl-3.5 mb-1.5 space-y-0.5">{children}</ol>
+              ),
+              li: ({ children }) => (
+                <li className="leading-snug">{children}</li>
+              ),
+              h1: ({ children }) => (
+                <h4 className="font-bold uppercase tracking-tight text-[11px] mt-2 mb-0.5">
+                  {children}
+                </h4>
+              ),
+              h2: ({ children }) => (
+                <h4 className="font-bold uppercase tracking-tight text-[11px] mt-2 mb-0.5">
+                  {children}
+                </h4>
+              ),
+              h3: ({ children }) => (
+                <h5 className="font-bold text-[10.5px] mt-1.5 mb-0.5">
+                  {children}
+                </h5>
+              ),
+              h4: ({ children }) => (
+                <h5 className="font-bold text-[10.5px] mt-1.5 mb-0.5">
+                  {children}
+                </h5>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-2 border-current/30 pl-2 my-1.5 italic opacity-90">
+                  {children}
+                </blockquote>
+              ),
+              table: ({ children }) => (
+                <div className="overflow-x-auto my-1.5 border border-current/20 rounded">
+                  <table className="min-w-full text-[10px] text-left border-collapse">
+                    {children}
+                  </table>
+                </div>
+              ),
+              th: ({ children }) => (
+                <th className="border-b border-current/20 p-1 font-bold bg-current/5">
+                  {children}
+                </th>
+              ),
+              td: ({ children }) => (
+                <td className="border-b border-current/10 p-1">{children}</td>
+              ),
+              code: ({ children }) => (
+                <code className="bg-current/10 px-1 py-0.5 rounded font-mono text-[10px]">
+                  {children}
+                </code>
+              ),
+            }}
+          >
+            {magia.descricao || ''}
+          </ReactMarkdown>
         </div>
       </div>
 
@@ -227,7 +283,7 @@ export const SpellPrintCard: React.FC<SpellPrintCardProps> = ({
             : 'Qualquer'}
         </div>
         {magia.nome_livro && (
-          <div className="shrink-0 italic">
+          <div className="shrink-0 italic font-medium">
             {magia.nome_livro}
           </div>
         )}

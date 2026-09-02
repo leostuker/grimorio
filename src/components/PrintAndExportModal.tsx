@@ -6,18 +6,18 @@ import {
   FileText,
   X,
   Sparkles,
-  Check,
-  CheckCircle2,
   Loader2,
   FolderArchive,
-  Layers,
-  Settings2,
-  RefreshCw,
+  Maximize2,
+  Minimize2,
+  Sliders,
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import JSZip from 'jszip';
 import { MagiaCompleta } from '../types';
-import { SpellPrintCard, PrintTheme, CardSize } from './SpellPrintCard';
+import { SpellPrintCard, PrintTheme } from './SpellPrintCard';
+
+export type LayoutMode = 'auto' | 'standard_2col' | 'all_wide';
 
 interface PrintAndExportModalProps {
   isOpen: boolean;
@@ -36,7 +36,11 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'print' | 'images'>('print');
   const [printTheme, setPrintTheme] = useState<PrintTheme>('parchment');
-  const [cardLayout, setCardLayout] = useState<CardSize>('card_standard');
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>('auto');
+  
+  // Customizações manuais de largura por card (id_magia -> boolean)
+  const [manualWideMap, setManualWideMap] = useState<Record<number, boolean>>({});
+
   const [isExportingZip, setIsExportingZip] = useState(false);
   const [exportProgress, setExportProgress] = useState<{ current: number; total: number; spellName: string } | null>(null);
   const [downloadingSingleId, setDownloadingSingleId] = useState<number | null>(null);
@@ -44,6 +48,31 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
   const printContainerRef = useRef<HTMLDivElement>(null);
 
   if (!isOpen) return null;
+
+  // Determinar se um card é largo (ocupa 2 colunas / largura lateral de 2 cards)
+  const isSpellWide = (magia: MagiaCompleta): boolean => {
+    // Se o usuário alternou manualmente este card, honrar sua escolha
+    if (manualWideMap[magia.id_magia] !== undefined) {
+      return manualWideMap[magia.id_magia];
+    }
+
+    // Modo forçado
+    if (layoutMode === 'all_wide') return true;
+    if (layoutMode === 'standard_2col') return false;
+
+    // Modo Automático: detecta se a descrição é longa ou possui muitas quebras/tabelas
+    const desc = magia.descricao || '';
+    const lineCount = desc.split('\n').length;
+    return desc.length > 360 || lineCount > 5;
+  };
+
+  // Alternar largura de um card individual
+  const toggleCardWide = (id: number, currentIsWide: boolean) => {
+    setManualWideMap((prev) => ({
+      ...prev,
+      [id]: !currentIsWide,
+    }));
+  };
 
   // Disparar impressão do navegador
   const handleTriggerPrint = () => {
@@ -62,7 +91,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
 
       const dataUrl = await toPng(element, {
         quality: 0.98,
-        pixelRatio: 2, // Dobro de resolução para ficar nítido
+        pixelRatio: 2, // Resolução nítida 2x
         cacheBust: true,
       });
 
@@ -139,7 +168,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
   return (
     <div
       id="print-export-modal"
-      className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col justify-between overflow-hidden animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col justify-between overflow-hidden animate-in fade-in duration-200"
     >
       {/* Top Header Controls (Oculto na impressão) */}
       <div className="bg-slate-900 border-b border-slate-800 px-4 py-3 shrink-0 flex items-center justify-between print:hidden">
@@ -155,7 +184,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
               </span>
             </h2>
             <p className="text-xs text-slate-400">
-              Prepare folhas para impressão A4 ou gere imagens individuais de cada card.
+              Folha formatada para 4 cards por página A4 com ajuste dinâmico para magias com textos longos.
             </p>
           </div>
         </div>
@@ -204,7 +233,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
       </div>
 
       {/* Toolbar de Opções de Customização (Oculto na impressão) */}
-      <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 py-2.5 shrink-0 flex flex-wrap items-center justify-between gap-3 text-xs print:hidden">
+      <div className="bg-slate-900/80 border-b border-slate-800/80 px-4 py-2.5 shrink-0 flex flex-wrap items-center justify-between gap-3 text-xs print:hidden">
         
         {/* Opções de Tema e Layout */}
         <div className="flex flex-wrap items-center gap-4">
@@ -216,7 +245,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPrintTheme('parchment')}
-                className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
                   printTheme === 'parchment'
                     ? 'bg-[#ede3cc] text-[#4a1c1a] shadow-xs'
                     : 'text-slate-400 hover:text-slate-200'
@@ -228,7 +257,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPrintTheme('eco_white')}
-                className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
                   printTheme === 'eco_white'
                     ? 'bg-white text-black shadow-xs font-bold'
                     : 'text-slate-400 hover:text-slate-200'
@@ -240,7 +269,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPrintTheme('dark_arcane')}
-                className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
                   printTheme === 'dark_arcane'
                     ? 'bg-indigo-600 text-white shadow-xs'
                     : 'text-slate-400 hover:text-slate-200'
@@ -252,43 +281,47 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
             </div>
           </div>
 
-          {/* Formato de Cartão / Layout */}
+          {/* Formato de Cartão / Layout Dinâmico */}
           {activeTab === 'print' && (
             <div className="flex items-center gap-1.5">
-              <span className="text-slate-400 font-medium">Formato:</span>
+              <span className="text-slate-400 font-medium">Diagramação:</span>
               <div className="flex bg-slate-950 rounded border border-slate-800 p-0.5">
                 <button
                   type="button"
-                  onClick={() => setCardLayout('card_standard')}
-                  className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
-                    cardLayout === 'card_standard'
+                  onClick={() => setLayoutMode('auto')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all flex items-center gap-1 ${
+                    layoutMode === 'auto'
                       ? 'bg-indigo-600 text-white'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
+                  title="4 cards por folha A4 com expansão automática para textos longos"
                 >
-                  Cartas (Padrão)
+                  <Sliders className="w-3 h-3" />
+                  <span>Dinâmica (4 por folha / 2 se longo)</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCardLayout('card_medium')}
-                  className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
-                    cardLayout === 'card_medium'
+                  onClick={() => setLayoutMode('standard_2col')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                    layoutMode === 'standard_2col'
                       ? 'bg-indigo-600 text-white'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
+                  title="Forçar todos os cards em tamanho padrão (4 por folha)"
                 >
-                  Cartões Médios
+                  Todos Padrão (2x2)
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCardLayout('grimoire_sheet')}
-                  className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${
-                    cardLayout === 'grimoire_sheet'
+                  onClick={() => setLayoutMode('all_wide')}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                    layoutMode === 'all_wide'
                       ? 'bg-indigo-600 text-white'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
+                  title="Forçar todos os cards em largura total (estilo grimório)"
                 >
-                  Livro / Grimório
+                  Todos Largos (1 por linha)
                 </button>
               </div>
             </div>
@@ -360,7 +393,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
       <div
         ref={printContainerRef}
         id="print-export-content-body"
-        className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-950 print:bg-white print:p-0 print:overflow-visible"
+        className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-950 print:bg-white print:p-0 print:m-0 print:overflow-visible"
       >
         {selectedSpells.length === 0 ? (
           <div className="h-64 flex flex-col items-center justify-center text-center text-slate-400">
@@ -372,43 +405,72 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
           </div>
         ) : activeTab === 'print' ? (
           /* Visualização de Impressão (Fichas organizadas para folha A4) */
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto print:max-w-none print:w-full print:m-0">
             
-            <div className="mb-4 text-xs text-slate-400 print:hidden flex items-center justify-between border-b border-slate-800/80 pb-2">
-              <span>
-                Prévia da diagramação de impressão ({selectedSpells.length} {selectedSpells.length === 1 ? 'cartão' : 'cartões'}):
+            <div className="mb-3 text-xs text-slate-400 print:hidden flex items-center justify-between border-b border-slate-800/80 pb-2">
+              <span className="font-medium text-slate-300">
+                Prévia da folha de impressão ({selectedSpells.length} {selectedSpells.length === 1 ? 'cartão' : 'cartões'}):
               </span>
-              <span className="text-[11px] text-slate-500">
-                Dica: Escolha "Salvar como PDF" na tela de impressão.
+              <span className="text-[11px] text-indigo-400">
+                Cards com textos longos expandem para a largura dupla automaticamente. Você também pode alternar individualmente nos botões de cada card.
               </span>
             </div>
 
-            {/* Grid de Impressão */}
+            {/* Grid de Impressão de 2 Colunas para A4 */}
             <div
-              className={`flex flex-wrap gap-4 justify-center print:block print:w-full`}
+              className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-4 print:gap-4 print:w-full print:m-0"
             >
-              {selectedSpells.map((magia) => (
-                <div
-                  key={magia.id_magia}
-                  className="relative group print:inline-block print:m-2 print:align-top"
-                >
-                  <SpellPrintCard
-                    magia={magia}
-                    theme={printTheme}
-                    cardSize={cardLayout}
-                  />
-
-                  {/* Botão de remover individual da seleção na prévia */}
-                  <button
-                    type="button"
-                    onClick={() => onDeselectSpell(magia.id_magia)}
-                    className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-500 text-white shadow-md flex items-center justify-center print:hidden opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="Remover desta folha"
+              {selectedSpells.map((magia) => {
+                const wide = isSpellWide(magia);
+                return (
+                  <div
+                    key={magia.id_magia}
+                    className={`relative group print-card-break print:break-inside-avoid print:page-break-inside-avoid ${
+                      wide
+                        ? 'col-span-1 md:col-span-2 print:col-span-2'
+                        : 'col-span-1'
+                    }`}
                   >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ))}
+                    {/* Barra de controle no topo do card (Visível apenas na tela, oculta na impressão) */}
+                    <div className="absolute top-2 right-2 z-10 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
+                      <button
+                        type="button"
+                        onClick={() => toggleCardWide(magia.id_magia, wide)}
+                        className="px-2 py-1 rounded bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-[10px] font-semibold border border-slate-700 shadow-md flex items-center gap-1 backdrop-blur-xs"
+                        title={wide ? 'Reduzir para 1 coluna' : 'Expandir para 2 colunas'}
+                      >
+                        {wide ? (
+                          <>
+                            <Minimize2 className="w-3 h-3 text-amber-400" />
+                            <span>1 Coluna</span>
+                          </>
+                        ) : (
+                          <>
+                            <Maximize2 className="w-3 h-3 text-indigo-400" />
+                            <span>Largo (2x)</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onDeselectSpell(magia.id_magia)}
+                        className="w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-500 text-white shadow-md flex items-center justify-center transition-colors"
+                        title="Remover desta folha"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <SpellPrintCard
+                      magia={magia}
+                      theme={printTheme}
+                      isWide={wide}
+                      className="w-full h-full"
+                    />
+                  </div>
+                );
+              })}
             </div>
 
           </div>
@@ -417,7 +479,7 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
           <div className="max-w-6xl mx-auto">
             <div className="mb-4 text-xs text-slate-400 flex items-center justify-between border-b border-slate-800/80 pb-2">
               <span>
-                Cards prontos para exportação em alta resolução (2x PNG):
+                Cards prontos para exportação em alta resolução (PNG com Markdown renderizado):
               </span>
               <span className="text-[11px] text-indigo-400">
                 Você pode baixar cada um individualmente ou todos de uma vez via ZIP.
@@ -425,46 +487,59 @@ export const PrintAndExportModal: React.FC<PrintAndExportModalProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-              {selectedSpells.map((magia) => (
-                <div
-                  key={magia.id_magia}
-                  className="flex flex-col items-center gap-2.5 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800"
-                >
-                  {/* Container do Card para renderização de imagem */}
+              {selectedSpells.map((magia) => {
+                const wide = isSpellWide(magia);
+                return (
                   <div
-                    id={`export-card-target-${magia.id_magia}`}
-                    className="overflow-hidden rounded-lg shadow-xl"
+                    key={magia.id_magia}
+                    className={`flex flex-col items-center gap-2.5 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 ${
+                      wide ? 'sm:col-span-2 lg:col-span-2 w-full max-w-[680px]' : 'w-full max-w-[360px]'
+                    }`}
                   >
-                    <SpellPrintCard
-                      magia={magia}
-                      theme={printTheme}
-                      cardSize="card_standard"
-                    />
-                  </div>
-
-                  {/* Controles do Card Individual */}
-                  <div className="w-full flex items-center justify-between gap-2 pt-1 border-t border-slate-800/80 text-xs">
-                    <span className="font-bold text-slate-300 truncate max-w-[170px]" title={magia.nome_magia}>
-                      {magia.nome_magia}
-                    </span>
-
-                    <button
-                      type="button"
-                      disabled={downloadingSingleId === magia.id_magia}
-                      onClick={() => handleDownloadSingleImage(magia)}
-                      className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-xs disabled:opacity-50"
-                      title="Baixar imagem PNG"
+                    {/* Container do Card para renderização de imagem */}
+                    <div
+                      id={`export-card-target-${magia.id_magia}`}
+                      className="overflow-hidden rounded-lg shadow-xl w-full"
                     >
-                      {downloadingSingleId === magia.id_magia ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                      ) : (
-                        <Download className="w-3 h-3" />
-                      )}
-                      <span>PNG</span>
-                    </button>
+                      <SpellPrintCard
+                        magia={magia}
+                        theme={printTheme}
+                        isWide={wide}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Controles do Card Individual */}
+                    <div className="w-full flex items-center justify-between gap-2 pt-1 border-t border-slate-800/80 text-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-bold text-slate-300 truncate" title={magia.nome_magia}>
+                          {magia.nome_magia}
+                        </span>
+                        {wide && (
+                          <span className="px-1.5 py-0.2 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 text-[10px] shrink-0 font-medium">
+                            Card Largo
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        disabled={downloadingSingleId === magia.id_magia}
+                        onClick={() => handleDownloadSingleImage(magia)}
+                        className="px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-xs disabled:opacity-50 shrink-0"
+                        title="Baixar imagem PNG"
+                      >
+                        {downloadingSingleId === magia.id_magia ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Download className="w-3 h-3" />
+                        )}
+                        <span>Baixar PNG</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
