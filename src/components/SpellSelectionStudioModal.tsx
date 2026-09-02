@@ -70,9 +70,9 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
       }
       // Auto-detecção inteligente para textos longos (> 380 caracteres ou com múltiplas listas)
       if (magia.descricao && magia.descricao.length > 380) {
-        return 'wide'; // 178mm x 146mm
+        return 'wide'; // 178mm x 140mm
       }
-      return 'standard'; // 89mm x 146mm
+      return 'standard'; // 89mm x 140mm
     },
     [customFormats]
   );
@@ -113,7 +113,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const format = getFormatForSpell(magia);
-      const dimensionLabel = format === 'wide' ? '178x146mm' : '89x146mm';
+      const dimensionLabel = format === 'wide' ? '178x140mm' : '89x140mm';
       
       const dataUrl = await toPng(el, {
         pixelRatio: 2.5, // Alta resolução 300+ DPI para impressão gráfica
@@ -164,7 +164,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
           await new Promise((resolve) => setTimeout(resolve, 80));
 
           const format = getFormatForSpell(magia);
-          const dim = format === 'wide' ? '178x146mm' : '89x146mm';
+          const dim = format === 'wide' ? '178x140mm' : '89x140mm';
           const safeName = `${String(i + 1).padStart(2, '0')}_${magia.nome_magia
             .toLowerCase()
             .replace(/[^a-z0-9]/g, '_')}_${dim}.png`;
@@ -226,7 +226,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                 </span>
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">
-                Dimensões de alta precisão: Padrão (89×146mm) e Ampla (178×146mm) com formatação rica em Markdown.
+                Dimensões de alta precisão: Padrão (89×140mm) e Ampla (178×140mm) com formatação rica em Markdown.
               </p>
             </div>
           </div>
@@ -345,7 +345,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                 type="button"
                 onClick={() => setAllFormats('standard')}
                 className="px-2 py-1 rounded text-[11px] font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
-                title="Definir todas para o tamanho padrão de 89mm x 146mm"
+                title="Definir todas para o tamanho padrão de 89mm x 140mm"
               >
                 Todas 89mm
               </button>
@@ -353,7 +353,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                 type="button"
                 onClick={() => setAllFormats('wide')}
                 className="px-2 py-1 rounded text-[11px] font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
-                title="Definir todas para o tamanho amplo/longo de 178mm x 146mm"
+                title="Definir todas para o tamanho amplo/longo de 178mm x 140mm"
               >
                 Todas 178mm
               </button>
@@ -496,9 +496,9 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                             ? 'bg-violet-950/80 border-violet-500/50 text-violet-300'
                             : 'bg-indigo-950/80 border-indigo-500/50 text-indigo-300'
                         }`}
-                        title="Alternar entre formato padrão (89x146mm) e amplo (178x146mm)"
+                        title="Alternar entre formato padrão (89x140mm) e amplo (178x140mm)"
                       >
-                        {isWide ? 'Ampla (178×146mm)' : 'Padrão (89×146mm)'}
+                        {isWide ? 'Ampla (178×140mm)' : 'Padrão (89×140mm)'}
                       </button>
 
                       <div className="flex items-center gap-1">
@@ -534,7 +534,7 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
                       style={{
                         transform: `scale(${zoomLevel})`,
                         transformOrigin: 'top center',
-                        marginBottom: `${(1 - zoomLevel) * -146 * 3.78}px`, // Compensar espaço vertical do CSS transform
+                        marginBottom: `${(1 - zoomLevel) * -140 * 3.78}px`, // Compensar espaço vertical do CSS transform
                       }}
                       className="card-zoom-container transition-transform duration-100"
                     >
@@ -564,11 +564,11 @@ export const SpellSelectionStudioModal: React.FC<SpellSelectionStudioModalProps>
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-300">Resumo de Impressão:</span>
             <span>
-              {selectedSpells.filter((s) => getFormatForSpell(s) === 'standard').length} cartas Padrão (89×146mm)
+              {selectedSpells.filter((s) => getFormatForSpell(s) === 'standard').length} cartas Padrão (89×140mm)
             </span>
             <span>•</span>
             <span>
-              {selectedSpells.filter((s) => getFormatForSpell(s) === 'wide').length} cartas Longas/Amplas (178×146mm)
+              {selectedSpells.filter((s) => getFormatForSpell(s) === 'wide').length} cartas Longas/Amplas (178×140mm)
             </span>
           </div>
 

@@ -133,6 +133,44 @@ export function formatAtributoNome(attr: Atributo): string {
 }
 
 /**
+ * Formata a duração para a carta sem o termo "Concentração, "
+ * Exemplo: "Concentração, até 1 minuto" -> "Até 1 minuto"
+ */
+export function formatDuracaoCard(duracao: string | null | undefined): string {
+  if (!duracao) return 'Instantânea';
+  let d = duracao.trim();
+  // Remove "Concentração, " ou "Concentracao, " do início
+  d = d.replace(/^concentra[çc][ãa]o\s*,\s*/i, '');
+  // Se sobrou apenas "Concentração", define fallback
+  if (/^concentra[çc][ãa]o$/i.test(d)) {
+    return 'Até 1 minuto';
+  }
+  // Garante a primeira letra maiúscula (ex: "até 1 minuto" -> "Até 1 minuto")
+  if (d.length > 0) {
+    d = d.charAt(0).toUpperCase() + d.slice(1);
+  }
+  return d || 'Instantânea';
+}
+
+/**
+ * Formata a lista de componentes incluindo 'C' quando há concentração
+ * Ordem: C (Concentração), V (Verbal), S (Somático), M (Material)
+ */
+export function formatComponentesCard(magia: {
+  concentracao?: boolean;
+  componente_verbal?: boolean;
+  componente_somatico?: boolean;
+  componente_material?: boolean;
+}): string {
+  const comps: string[] = [];
+  if (magia.concentracao) comps.push('C');
+  if (magia.componente_verbal) comps.push('V');
+  if (magia.componente_somatico) comps.push('S');
+  if (magia.componente_material) comps.push('M');
+  return comps.length > 0 ? comps.join(', ') : 'Nenhum';
+}
+
+/**
  * Remove sintaxe básica de markdown para renderizar resumos limpos em cards e tabelas
  */
 export function stripMarkdown(md: string): string {

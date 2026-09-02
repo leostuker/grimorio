@@ -17,12 +17,14 @@ import {
   getTipoDanoBadgeClass,
   formatDanoFormula,
   formatAtributoNome,
+  formatDuracaoCard,
+  formatComponentesCard,
 } from '../utils/magicHelpers';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { GrimoireIcon } from './GrimoireIcon';
 
 export type CardTheme = 'dark' | 'parchment' | 'clean';
-export type CardFormat = 'standard' | 'wide'; // standard = 89x146mm, wide = 178x146mm
+export type CardFormat = 'standard' | 'wide'; // standard = 89x140mm, wide = 178x140mm
 
 interface PrintableSpellCardProps {
   magia: MagiaCompleta;
@@ -135,6 +137,8 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
     };
 
     const st = getThemeStyles();
+    const duracaoFormatada = formatDuracaoCard(magia.duracao);
+    const componentesFormatados = formatComponentesCard(magia);
 
     return (
       <div
@@ -145,22 +149,22 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
         } ${showCutGuides ? 'outline-1 outline-dashed outline-indigo-500/30' : ''}`}
         style={{
           width: isWide ? '178mm' : '89mm',
-          height: '146mm',
+          height: '140mm',
           minWidth: isWide ? '178mm' : '89mm',
           maxWidth: isWide ? '178mm' : '89mm',
-          minHeight: '146mm',
-          maxHeight: '146mm',
-          padding: '2.5mm',
+          minHeight: '140mm',
+          maxHeight: '140mm',
+          padding: '2mm',
           boxSizing: 'border-box',
           pageBreakInside: 'avoid',
           breakInside: 'avoid',
           overflow: 'hidden',
-          borderRadius: '3.5mm',
+          borderRadius: '3mm',
         }}
       >
         {/* Inner Ornate Frame Container */}
         <div
-          className={`w-full h-full rounded-[2.5mm] border flex flex-col justify-between p-[2.5mm] box-border overflow-hidden relative ${st.innerFrame}`}
+          className={`w-full h-full rounded-[2.2mm] border flex flex-col justify-between p-[2.2mm] box-border overflow-hidden relative ${st.innerFrame}`}
         >
           {/* Top Arcane Corner Accents */}
           <div className={`absolute top-1 left-1 w-2 h-2 border-t border-l pointer-events-none ${st.cornerAccent}`} />
@@ -170,14 +174,14 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
 
           {/* CARD TOP HEADER */}
           <div className="shrink-0 space-y-1">
-            {/* Upper Ribbon: Círculo, Escola, Dimensão */}
-            <div className={`flex items-center justify-between gap-1 border-b pb-1 ${st.divider}`}>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className={`text-[9.5px] font-black tracking-wide px-1.5 py-0.2 rounded border uppercase font-mono ${st.circleBadge}`}>
+            {/* Upper Ribbon: Círculo & Escola SEMPRE na mesma linha e Livro (sem tamanho da carta) */}
+            <div className={`flex items-center justify-between gap-1.5 border-b pb-1 ${st.divider}`}>
+              <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
+                <span className={`text-[9.5px] font-black tracking-wide px-1.5 py-0.2 rounded border uppercase font-mono whitespace-nowrap ${st.circleBadge}`}>
                   {formatCirculo(magia.circulo)}
                 </span>
                 <span
-                  className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded border uppercase ${
+                  className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded border uppercase whitespace-nowrap ${
                     theme === 'dark' ? escolaColor.badge : st.schoolBadge
                   }`}
                 >
@@ -185,26 +189,21 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
                 </span>
               </div>
 
-              <div className="flex items-center gap-1">
-                <span className={`text-[8.5px] font-mono tracking-tighter ${st.subHeader}`}>
-                  {isWide ? '178×146mm' : '89×146mm'}
+              {magia.nome_livro && (
+                <span
+                  className={`text-[8px] px-1.5 py-0.2 rounded border font-medium truncate max-w-[110px] ${st.bookBadge}`}
+                  title={magia.nome_livro}
+                >
+                  {magia.nome_livro}
                 </span>
-                {magia.nome_livro && (
-                  <span
-                    className={`text-[8.5px] px-1.5 py-0.2 rounded border font-medium truncate max-w-[100px] ${st.bookBadge}`}
-                    title={magia.nome_livro}
-                  >
-                    {magia.nome_livro}
-                  </span>
-                )}
-              </div>
+              )}
             </div>
 
             {/* Spell Name Title */}
             <div className="flex items-center justify-between gap-2">
               <h2
                 className={`font-black tracking-tight leading-tight line-clamp-1 ${
-                  isWide ? 'text-[15px]' : 'text-[13.5px]'
+                  isWide ? 'text-[14.5px]' : 'text-[13px]'
                 } ${st.headerTitle}`}
                 title={magia.nome_magia}
               >
@@ -235,22 +234,15 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
 
               <div className="flex items-center gap-1 min-w-0">
                 <Hourglass className={`w-2.5 h-2.5 shrink-0 ${st.specsIcon}`} />
-                <span className="truncate">
-                  <strong className="font-bold">Duração:</strong> {magia.duracao}
+                <span className="truncate" title={duracaoFormatada}>
+                  <strong className="font-bold">Duração:</strong> {duracaoFormatada}
                 </span>
               </div>
 
               <div className="flex items-center gap-1 min-w-0">
                 <Layers className={`w-2.5 h-2.5 shrink-0 ${st.specsIcon}`} />
-                <span className="truncate font-mono">
-                  <strong className="font-sans font-bold">Comp:</strong>{' '}
-                  {[
-                    magia.componente_verbal ? 'V' : null,
-                    magia.componente_somatico ? 'S' : null,
-                    magia.componente_material ? 'M' : null,
-                  ]
-                    .filter(Boolean)
-                    .join(', ') || 'Nenhum'}
+                <span className="truncate font-mono" title={componentesFormatados}>
+                  <strong className="font-sans font-bold">Comp:</strong> {componentesFormatados}
                 </span>
               </div>
             </div>
@@ -265,50 +257,46 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
               </div>
             )}
 
-            {/* Quick Rule Tags (Concentração, Salvaguarda, Ataque, Dano) */}
-            <div className="flex flex-wrap items-center gap-0.5 text-[8.5px]">
-              {magia.concentracao && (
-                <span className={`px-1.5 py-0.2 rounded font-bold border ${st.tagConcentracao}`}>
-                  Concentração
-                </span>
-              )}
-
-              {magia.salvaguarda && (
-                <span className={`px-1.5 py-0.2 rounded font-bold border flex items-center gap-0.5 ${st.tagSalvaguarda}`}>
-                  <Shield className="w-2 h-2" />
-                  Salv: {magia.atributo_salvaguarda || 'Sim'}
-                </span>
-              )}
-
-              {magia.ataque && (
-                <span className={`px-1.5 py-0.2 rounded font-bold border flex items-center gap-0.5 ${st.tagAtaque}`}>
-                  <Crosshair className="w-2 h-2" />
-                  Ataque
-                </span>
-              )}
-
-              {danoFormula && (
-                <span className={`px-1.5 py-0.2 rounded font-black font-mono border ${st.tagDano}`}>
-                  {danoFormula}
-                </span>
-              )}
-
-              {magia.tipos_dano &&
-                magia.tipos_dano.map((td) => (
-                  <span
-                    key={td}
-                    className={`px-1 py-0.2 rounded font-bold border ${
-                      theme === 'dark'
-                        ? getTipoDanoBadgeClass(td)
-                        : theme === 'clean'
-                        ? 'bg-slate-100 text-slate-900 border-slate-300'
-                        : 'bg-[#ebd8b1] text-[#331c07] border-[#caa976]'
-                    }`}
-                  >
-                    {td}
+            {/* Quick Rule Tags (Salvaguarda, Ataque, Dano) */}
+            {(magia.salvaguarda || magia.ataque || danoFormula || (magia.tipos_dano && magia.tipos_dano.length > 0)) && (
+              <div className="flex flex-wrap items-center gap-0.5 text-[8.5px]">
+                {magia.salvaguarda && (
+                  <span className={`px-1.5 py-0.2 rounded font-bold border flex items-center gap-0.5 ${st.tagSalvaguarda}`}>
+                    <Shield className="w-2 h-2" />
+                    Salv: {magia.atributo_salvaguarda || 'Sim'}
                   </span>
-                ))}
-            </div>
+                )}
+
+                {magia.ataque && (
+                  <span className={`px-1.5 py-0.2 rounded font-bold border flex items-center gap-0.5 ${st.tagAtaque}`}>
+                    <Crosshair className="w-2 h-2" />
+                    Ataque
+                  </span>
+                )}
+
+                {danoFormula && (
+                  <span className={`px-1.5 py-0.2 rounded font-black font-mono border ${st.tagDano}`}>
+                    {danoFormula}
+                  </span>
+                )}
+
+                {magia.tipos_dano &&
+                  magia.tipos_dano.map((td) => (
+                    <span
+                      key={td}
+                      className={`px-1 py-0.2 rounded font-bold border ${
+                        theme === 'dark'
+                          ? getTipoDanoBadgeClass(td)
+                          : theme === 'clean'
+                          ? 'bg-slate-100 text-slate-900 border-slate-300'
+                          : 'bg-[#ebd8b1] text-[#331c07] border-[#caa976]'
+                      }`}
+                    >
+                      {td}
+                    </span>
+                  ))}
+              </div>
+            )}
           </div>
 
           {/* CARD MIDDLE BODY: MARKDOWN DESCRIPTION (Scroll/fit container) */}
@@ -321,13 +309,13 @@ export const PrintableSpellCard = forwardRef<HTMLDivElement, PrintableSpellCardP
               <MarkdownRenderer
                 content={magia.descricao}
                 theme={theme}
-                className="text-[9.5px] leading-snug space-y-1"
+                className="text-[9.2px] leading-snug space-y-1"
               />
             </div>
           </div>
 
           {/* CARD BOTTOM FOOTER: CONJURADORES & METADATA */}
-          <div className={`shrink-0 pt-1 border-t flex items-center justify-between text-[8.5px] ${st.divider}`}>
+          <div className={`shrink-0 pt-1 border-t flex items-center justify-between text-[8px] ${st.divider}`}>
             <div className="flex items-center gap-1 overflow-hidden flex-wrap max-w-[85%]">
               <span className={`font-bold ${st.footerText}`}>Classes:</span>
               {magia.conjuradores && magia.conjuradores.length > 0 ? (

@@ -4,7 +4,7 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 6mm 6mm 6mm 6mm;
+    margin: 5mm 5mm 5mm 5mm;
   }
 
   *,
@@ -79,13 +79,13 @@
     display: none !important;
   }
 
-  /* Container das cartas selecionadas */
+  /* Container das cartas selecionadas - grid de impressão A4 perfeito */
   #printable-deck-area {
     display: flex !important;
     flex-wrap: wrap !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    gap: 4mm 4mm !important;
+    gap: 3mm 3mm !important;
     padding: 0 !important;
     margin: 0 auto !important;
     width: 100% !important;
